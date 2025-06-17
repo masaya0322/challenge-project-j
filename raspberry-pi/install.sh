@@ -10,8 +10,8 @@ GAME_DIR="$(dirname "$SCRIPT_DIR")"
 echo "ゲームディレクトリ: $GAME_DIR"
 
 # システム更新
-echo "システムを更新中..."
-sudo apt update && sudo apt upgrade -y
+#echo "システムを更新中..."
+#sudo apt update && sudo apt upgrade -y
 
 # 依存関係インストール
 echo "依存関係をインストール中..."
