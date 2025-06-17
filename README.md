@@ -1,0 +1,1 @@
+git clone https://github.com/username/your-game.git /home/pi/game-iot
