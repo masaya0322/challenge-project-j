@@ -2,7 +2,7 @@
 
 # 環境変数設定
 export DISPLAY=:0
-export HOME=/home/pi
+export HOME=/home/aj
 
 # スクリプトのディレクトリを取得
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"  

@@ -5,10 +5,10 @@ Wants=graphical-session.target network-online.target
 
 [Service]
 Type=simple
-User=pi
-Group=pi
+User=aj
+Group=aj
 Environment=DISPLAY=:0
-Environment=HOME=/home/pi
+Environment=HOME=/home/aj
 WorkingDirectory=GAME_DIR_PLACEHOLDER
 ExecStart=GAME_DIR_PLACEHOLDER/raspberry-pi/start_game.sh
 Restart=always

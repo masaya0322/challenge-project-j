@@ -44,9 +44,9 @@ sudo systemctl daemon-reload
 sudo systemctl enable game-iot.service
 
 # 自動起動設定（デスクトップ環境用の追加設定）
-sudo mkdir -p /home/pi/.config/autostart # 後からsudo追加
+sudo mkdir -p /home/aj/.config/autostart # 後からsudo追加
 # sudo cat > /home/pi/.config/autostart/game-iot.desktop << EOF # 後からsudo追加
-sudo tee /home/pi/.config/autostart/game-iot.desktop > /dev/null << 'EOF'
+sudo tee /home/aj/.config/autostart/game-iot.desktop > /dev/null << 'EOF'
 [Desktop Entry]
 Type=Application
 Name=Game IoT
