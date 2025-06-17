@@ -1,1 +1,1 @@
-git clone https://github.com/username/your-game.git /home/pi/game-iot
+git clone https://github.com/masaya0322/challenge-project-j.git /home/pi/game-iot
