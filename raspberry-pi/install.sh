@@ -20,7 +20,7 @@ sudo apt install -y git python3-pip python3-pygame python3-venv
 # Python仮想環境作成（オプション）
 if [ ! -d "$GAME_DIR/venv" ]; then
     echo "Python仮想環境を作成中..."
-    python3 -m venv "$GAME_DIR/venv"
+    sudo python3 -m venv "$GAME_DIR/venv" # 後からsudo追加
 fi
 
 # 仮想環境で依存関係インストール
@@ -32,7 +32,7 @@ if [ -f "$GAME_DIR/requirements.txt" ]; then
 fi
 
 # 起動スクリプトに実行権限
-chmod +x "$SCRIPT_DIR/start_game.sh"
+sudo chmod +x "$SCRIPT_DIR/start_game.sh" # 後からsudo追加
 
 # systemdサービスファイルを動的生成
 echo "systemdサービスを設定中..."
@@ -44,8 +44,9 @@ sudo systemctl daemon-reload
 sudo systemctl enable game-iot.service
 
 # 自動起動設定（デスクトップ環境用の追加設定）
-mkdir -p /home/pi/.config/autostart
-cat > /home/pi/.config/autostart/game-iot.desktop << EOF
+sudo mkdir -p /home/pi/.config/autostart # 後からsudo追加
+# sudo cat > /home/pi/.config/autostart/game-iot.desktop << EOF # 後からsudo追加
+sudo tee /home/pi/.config/autostart/game-iot.desktop > /dev/null << 'EOF'
 [Desktop Entry]
 Type=Application
 Name=Game IoT
