@@ -110,8 +110,8 @@ def main():
     pygame.init()
 
     # 画面の設定
-    size = [SCREEN_WIDTH, SCREEN_HEIGHT]
-    screen = pygame.display.set_mode(size)
+    # size = [SCREEN_WIDTH, SCREEN_HEIGHT] # フルスクリーン時は (0,0) または解像度指定
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     pygame.display.set_caption("2D横スクロールゲーム")
 
     # スプライトリストの作成
