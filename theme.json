@@ -1,0 +1,50 @@
+{
+    "defaults":
+    {
+        "colours":
+        {
+            "normal_bg": "#F0F0F0",
+            "hover_bg": "#E0E0E0",
+            "disabled_bg": "#C0C0C0",
+            "selected_bg": "#D0D0D0",
+            "dark_bg": "#303030",
+            "normal_text": "#000000",
+            "hover_text": "#000000",
+            "selected_text": "#000000",
+            "disabled_text": "#808080",
+            "link_text": "#0000FF",
+            "link_hover": "#0000AA",
+            "link_selected": "#551A8B",
+            "text_shadow": "#777777",
+            "normal_border": "#AAAAAA",
+            "hover_border": "#BBBBBB",
+            "disabled_border": "#888888",
+            "selected_border": "#000000"
+        }
+    },
+    "button":
+    {
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "12",
+            "border_width": "1",
+            "shadow_width": "2"
+        },
+        "colours":
+        {
+            "normal_bg": "#78C850",
+            "hover_bg": "#98D878",
+            "normal_border": "#78C850",
+            "hover_border": "#98D878",
+            "normal_text": "#FFFFFF"
+        },
+        "font":
+        {
+            "name": "MS Gothic",
+            "size": "20",
+            "bold": "1",
+            "italic": "0"
+        }
+    }
+}
