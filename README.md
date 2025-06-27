@@ -12,3 +12,6 @@ sudo chmod -R u+w /home/aj/game-iot
 
 
 sudo reboot
+
+ブランチ名：(feature,add,fix,refactor)/#ISSUE番号/ISSUEタイトル
+英語で統一すること
