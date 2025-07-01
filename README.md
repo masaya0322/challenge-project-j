@@ -38,20 +38,22 @@ mainブランチの場合：git pull
 cdはchallenge-project-jである
 
 ### 1.Dockerがインストールされていることを確認
-```docker --version```
+docker --version
 ### 2.カレントディレクトリ移動
-```cd backend```
+cd backend
 ### 3.コンテナをビルド
-```docker build -t cpj-backend-app .```
+docker build -t cpj-backend-app .
 ### 4.実行
-```docker run -d -p 8000:8000 --name cpj-backend cpj-backend-app```
+docker run -d -p 8000:8000 --name cpj-backend cpj-backend-app
 ### 5.テスト
-```curl http://localhost:8000/api/hello```
+curl http://localhost:8000/api/hello
 
 ### コピー用
-```docker --version
+```
+docker --version
 cd backend
 docker build -t cpj-backend-app .
 docker run -d -p 8000:8000 --name cpj-backend cpj-backend-app
-curl http://localhost:8000/api/hello```
+curl http://localhost:8000/api/hello
+```
 にアクセスすると、Hello Worldが返される
