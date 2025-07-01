@@ -1,15 +1,20 @@
 ブランチ名：(feature,add,fix,refactor)/#ISSUE番号/ISSUEタイトル
 英語で統一すること
 
-導入
-# Dockerがインストールされていることを確認
+前提
+cdはchallenge-project-jである
+
+# 導入
+## Dockerがインストールされていることを確認
 docker --version
-# カレントディレクトリ移動
+## カレントディレクトリ移動
 cd backend
-# コンテナをビルド
+## コンテナをビルド
 docker build -t cpj-backend-app .
-# 実行
+## 実行
 docker run -d -p 8000:8000 --name cpj-backend cpj-backend-app
+## テスト
+curl http://localhost:8000/api/hello
 
 # テスト
 http://localhost:8000/api/hello
