@@ -1,10 +1,9 @@
-ブランチ名：(feature,add,fix,refactor)/#ISSUE番号/ISSUEタイトル
-英語で統一すること
+
 
 前提
 cdはchallenge-project-jである
 
-# 導入
+# backend導入
 ## Dockerがインストールされていることを確認
 docker --version
 ## カレントディレクトリ移動
