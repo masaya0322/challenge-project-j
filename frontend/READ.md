@@ -1,0 +1,6 @@
+### 初期設定
+- `pnpm install `で依存関係をインストール
+
+### 起動方法
+- Dockerを起動させる
+- `frontend`で ` pnpm run dev `
