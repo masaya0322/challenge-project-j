@@ -94,20 +94,12 @@ def bind_rfcomm(port, mac_address):
         print(f"rfcommのバインドに失敗しました: {e}")
         return False
 
-def send_rfid_command(port, baudrate, command_hex_string):
-    """シリアルポート経由でコマンドを送信し、応答を待つ"""
-    ser = None
+def send_rfid_command(ser, command_hex_string):
+    """開いているシリアルポート経由でコマンドを送信し、応答を待つ"""
     try:
-        print(f"{port} を開いてコマンドを送信します...")
-        # minicomの標準設定(8N1、フロー制御なし)に合わせてパラメータを明示的に指定
-        ser = serial.Serial(
-            port,
-            baudrate=baudrate,
-            bytesize=serial.EIGHTBITS,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            timeout=2
-        )
+        # 送受信バッファをクリア
+        ser.reset_input_buffer()
+        ser.reset_output_buffer()
         
         # 16進文字列をバイトデータに変換
         command_bytes = bytes.fromhex(command_hex_string)
@@ -117,7 +109,7 @@ def send_rfid_command(port, baudrate, command_hex_string):
         print(f"送信データ: {command_hex_string}")
         
         # デバイスが処理するのを少し待つ
-        time.sleep(0.1)
+        time.sleep(0.2)
         
         # 応答受信（終端文字 0x0D まで読み込み）
         response_bytes = ser.read_until(b'\r') # b'\r' は 0x0D
@@ -132,28 +124,48 @@ def send_rfid_command(port, baudrate, command_hex_string):
     except serial.SerialException as e:
         print(f"シリアルポートのエラー: {e}")
         return None
-    finally:
-        if ser and ser.is_open:
-            ser.close()
-            print(f"{port} を閉じました。")
 
 
 if __name__ == "__main__":
     # ステップ1: MACアドレスを指定してペアリング
     target_mac = connect_and_pair(RFID_MAC_ADDRESS)
-    
     if not target_mac:
-        sys.exit(1) # MACアドレスが取得できなければ終了
+        sys.exit(1)
         
     # ステップ2: rfcommのバインド
     if not bind_rfcomm(SERIAL_PORT, target_mac):
-        sys.exit(1) # バインドに失敗したら終了
+        sys.exit(1)
 
-    # ステップ3: コマンドの送信（例：ROMバージョン読み取り）
-    # コマンド: 02 00 4F 01 90 03 E5 0D
-    rom_version_command = "02004F019003E50D"
-    send_rfid_command(SERIAL_PORT, BAUD_RATE, rom_version_command)
+    # ステップ3: シリアルポートを開き、コマンドを送信
+    ser = None
+    try:
+        print(f"{SERIAL_PORT} を開いてコマンドを送信します...")
+        ser = serial.Serial(
+            SERIAL_PORT,
+            baudrate=BAUD_RATE,
+            bytesize=serial.EIGHTBITS,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            timeout=2
+        )
 
-    # 他のコマンドも試せます（例：ブザー制御）
-    buzzer_command = "0200420003470D"
-    send_rfid_command(SERIAL_PORT, BAUD_RATE, buzzer_command)
+        # コマンド送信（例：ROMバージョン読み取り）
+        print("\n--- ROMバージョン読み取り ---")
+        rom_version_command = "02004F019003E50D"
+        send_rfid_command(ser, rom_version_command)
+
+        # コマンド間に十分な待機時間を設ける
+        time.sleep(1)
+
+        # 他のコマンドも試せます（例：ブザー制御）
+        print("\n--- ブザー制御 ---")
+        buzzer_command = "0200420003470D"
+        send_rfid_command(ser, buzzer_command)
+
+    except serial.SerialException as e:
+        print(f"シリアルポートのエラー: {e}")
+        sys.exit(1)
+    finally:
+        if ser and ser.is_open:
+            ser.close()
+            print(f"\n{SERIAL_PORT} を閉じました。")
