@@ -99,7 +99,15 @@ def send_rfid_command(port, baudrate, command_hex_string):
     ser = None
     try:
         print(f"{port} を開いてコマンドを送信します...")
-        ser = serial.Serial(port, baudrate=baudrate, timeout=2) # タイムアウトを2秒に設定
+        # minicomの標準設定(8N1、フロー制御なし)に合わせてパラメータを明示的に指定
+        ser = serial.Serial(
+            port,
+            baudrate=baudrate,
+            bytesize=serial.EIGHTBITS,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            timeout=2
+        )
         
         # 16進文字列をバイトデータに変換
         command_bytes = bytes.fromhex(command_hex_string)
