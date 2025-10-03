@@ -5,12 +5,12 @@ import sys
 import serial
 
 # --- 設定項目 ---
-RFID_MAC_ADDRESS = "EC:62:60:C4:A8:37"  # 対象のRFIDリーダーのMACアドレス
+RFID_MAC_ADDRESS = "EC:62:60:C4:A8:36"  # 対象のRFIDリーダーのMACアドレス
 SERIAL_PORT = "/dev/rfcomm0"
 BAUD_RATE = 115200
 
 def connect_and_pair(mac_address):
-    """指定されたMACアドレスに接続し、ペアリングと信頼設定を行う"""
+    """指定されたMACアドレスのデバイスをスキャンで確認後、接続とペアリングを行う"""
     if not mac_address:
         print("エラー: MACアドレスが指定されていません。")
         return None
@@ -19,7 +19,21 @@ def connect_and_pair(mac_address):
         # bluetoothctlを起動
         child = pexpect.spawn('bluetoothctl', encoding='utf-8')
         print("bluetoothctlを起動しました。")
-        print(f"指定されたMACアドレスを使用します: {mac_address}")
+
+        # スキャンしてデバイスの存在を確認
+        print("デバイスをスキャン中...")
+        child.sendline('scan on')
+        try:
+            # MACアドレスが含まれる行を待つ（タイムアウトは30秒）
+            child.expect(f'Device {mac_address}', timeout=30)
+            print(f"デバイス {mac_address} を発見しました。")
+        except pexpect.exceptions.TIMEOUT:
+            print(f"エラー: デバイス {mac_address} が見つかりませんでした。")
+            child.sendline('quit')
+            return None
+        finally:
+            # スキャン停止
+            child.sendline('scan off')
         
         # ペアリング
         print(f"{mac_address} とペアリングします...")
