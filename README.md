@@ -33,9 +33,13 @@ mainブランチの場合：git pull
 他ブランチの場合は相談すること
 ```
 
-## backend
+## backendの初回起動
 前提
 cdはchallenge-project-jである
+
+*初回実行時は以下の通り*
+初回実行時は、docker buildでコンテナを作成し、docker runを使ってそのコンテナを初回起動をする。
+※2回目以降の実行の場合は後述
 
 ### 1.Dockerがインストールされていることを確認
 docker --version
@@ -57,3 +61,12 @@ docker run -d -p 8000:8000 --name cpj-backend cpj-backend-app
 curl http://localhost:8000/api/hello
 ```
 にアクセスすると、Hello Worldが返される
+
+## backendの2回目以降の起動
+2回目以降の起動の場合は、docker runで既存のコンテナをONにするだけでよく、ビルドはしなくても良い。
+※コード変更した場合は、改めてdocker buildとdocker runをする必要がある
+
+### dockerの起動
+docker start cpj-backend
+
+これでOK。
