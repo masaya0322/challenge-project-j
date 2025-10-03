@@ -108,8 +108,11 @@ def send_rfid_command(port, baudrate, command_hex_string):
         ser.write(command_bytes)
         print(f"送信データ: {command_hex_string}")
         
-        # 応答受信（最大64バイトまで読み込み）
-        response_bytes = ser.read(64)
+        # デバイスが処理するのを少し待つ
+        time.sleep(0.1)
+        
+        # 応答受信（終端文字 0x0D まで読み込み）
+        response_bytes = ser.read_until(b'\r') # b'\r' は 0x0D
         
         if response_bytes:
             print(f"受信データ: {response_bytes.hex().upper()}")
