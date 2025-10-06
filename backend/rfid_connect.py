@@ -125,6 +125,25 @@ def send_rfid_command(ser, command_hex_string):
         print(f"シリアルポートのエラー: {e}")
         return None
 
+def generate_full_rfid_command(short_command):
+    hex_list = [short_command[i:i+2] for i in range(0, len(short_command), 2)]
+    
+    STX_HEX = "02"
+    ADDRESS_HEX = "00"
+    command_hex = hex_list[0]
+    data_length_hex = hex_list[1]
+    data_hex_list = hex_list[2:]
+    ETX_HEX = "03"
+
+    checksum = 0
+    for hex_byte in [STX_HEX, ADDRESS_HEX, command_hex, data_length_hex, *data_hex_list, ETX_HEX]:
+        checksum += int(hex_byte, 16)
+    checksum_hex = f"{checksum & 0xFF:02X}"
+
+    CR_HEX = "0D"
+
+    full_command = [STX_HEX, ADDRESS_HEX, command_hex, data_length_hex, *data_hex_list, ETX_HEX, checksum_hex, CR_HEX]
+    return full_command
 
 if __name__ == "__main__":
     # ステップ1: MACアドレスを指定してペアリング
@@ -164,13 +183,34 @@ if __name__ == "__main__":
 
         # 任意のコマンドを実行する
         print("\n--- 任意のコマンドを実行する ---")
+        print("\nここではSTX、ETX、CRなど、毎回固定となる部分を自動的に補完し、簡易的にコマンドを生成できます")
+        print("\nアドレスは00hであることを前提として、SUMもマニュアルに基づいて自動計算します")
+        print("\n1バイト目はコマンド名で、第6章や第7章を参照のこと")
+        print("\n2バイト目はデータ長で、データ部の長さを記述してください")
+        print("\n3バイト目以降はデータ部で、データを記述してください")
         print("\n終了する場合はexitと入力してください")
 
         while True:
-            command = input()
-            if command == "exit":
+            print("\nCOMMAND:")
+            short_command = input().strip()
+
+            if short_command.lower() == "exit":
                 break
-            send_rfid_command(ser, command)
+
+            if not short_command:
+                print("\nエラー: コマンドが入力されていないようです")
+                continue
+
+            if not all(c in '0123456789ABCDEFabcdef' for c in short_command):
+                print("\nエラー: 16進数のみ入力してください（0-9, A-F）")
+                continue
+
+            if len(short_command) < 4:
+                print("\n エラー: コマンドが短すぎるようです。最低4文字以上必要なはずです")
+                continue
+
+            full_command = generate_full_rfid_command(short_command)
+            send_rfid_command(ser, full_command)
 
     except serial.SerialException as e:
         print(f"シリアルポートのエラー: {e}")
