@@ -162,6 +162,16 @@ if __name__ == "__main__":
         buzzer_command = "0200420003470D"
         send_rfid_command(ser, buzzer_command)
 
+        # 任意のコマンドを実行する
+        print("\n--- 任意のコマンドを実行する ---")
+        print("\n終了する場合はexitと入力してください")
+
+        while True:
+            command = input()
+            if command == "exit":
+                break
+            send_rfid_command(ser, command)
+
     except serial.SerialException as e:
         print(f"シリアルポートのエラー: {e}")
         sys.exit(1)
