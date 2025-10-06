@@ -143,7 +143,9 @@ def generate_full_rfid_command(short_command):
     CR_HEX = "0D"
 
     full_command = [STX_HEX, ADDRESS_HEX, command_hex, data_length_hex, *data_hex_list, ETX_HEX, checksum_hex, CR_HEX]
-    return full_command
+    
+    command_string = "".join(full_command)
+    return command_string
 
 if __name__ == "__main__":
     # ステップ1: MACアドレスを指定してペアリング
@@ -183,15 +185,15 @@ if __name__ == "__main__":
 
         # 任意のコマンドを実行する
         print("\n--- 任意のコマンドを実行する ---")
-        print("\nここではSTX、ETX、CRなど、毎回固定となる部分を自動的に補完し、簡易的にコマンドを生成できます")
-        print("\nアドレスは00hであることを前提として、SUMもマニュアルに基づいて自動計算します")
-        print("\n1バイト目はコマンド名で、第6章や第7章を参照のこと")
-        print("\n2バイト目はデータ長で、データ部の長さを記述してください")
-        print("\n3バイト目以降はデータ部で、データを記述してください")
-        print("\n終了する場合はexitと入力してください")
+        print("ここではSTX、ETX、CRなど、毎回固定となる部分を自動的に補完し、簡易的にコマンドを生成できます")
+        print("アドレスは00hであることを前提として、SUMもマニュアルに基づいて自動計算します")
+        print("1バイト目はコマンド名で、第6章や第7章を参照のこと")
+        print("2バイト目はデータ長で、データ部の長さを記述してください")
+        print("3バイト目以降はデータ部で、データを記述してください")
+        print("終了する場合はexitと入力してください")
 
         while True:
-            print("\nCOMMAND:")
+            print("COMMAND:")
             short_command = input().strip()
 
             if short_command.lower() == "exit":
