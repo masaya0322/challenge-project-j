@@ -3,6 +3,7 @@ import subprocess
 import time
 import sys
 import serial
+from enum import Enum
 
 # --- 設定項目 ---
 RFID_MAC_ADDRESS = "EC:62:60:C4:A8:36"  # 対象のRFIDリーダーのMACアドレス
@@ -147,6 +148,44 @@ def generate_full_rfid_command(short_command):
     command_string = "".join(full_command)
     return command_string
 
+class COMMANDSTATUS(Enum):
+    EXIT = 0
+    PASS = 1
+    REJECT = 2
+
+def is_validation_pass_command(command_name):
+    COMMAND_LENGTH = 2
+    if command_name.lower() == "exit":
+        return COMMANDSTATUS.EXIT
+
+    if len(command_name) != COMMAND_LENGTH:
+        print(f"エラー: コマンド文字数が正しくありません。{COMMAND_LENGTH}文字である必要があります")
+        return COMMANDSTATUS.REJECT
+
+    if not all(c in '0123456789ABCDEFabcdef' for c in command_name):
+        print("エラー: 16進数のみ入力してください（0-9, A-F）")
+        return COMMANDSTATUS.REJECT
+
+    return COMMANDSTATUS.PASS
+
+def is_validation_pass_data(data_part):
+    if data_part.lower() == "exit":
+        return COMMANDSTATUS.EXIT
+
+    if len(data_part) % 2 != 0:
+        print("エラー: データ長の文字数が正しくありません")
+        return COMMANDSTATUS.REJECT
+
+    if not all(c in '0123456789ABCDEFabcdef' for c in data_part):
+        print("エラー: 16進数のみ入力してください（0-9, A-F）")
+        return COMMANDSTATUS.REJECT
+    
+    return COMMANDSTATUS.PASS
+
+def generate_data_length_part(data_part):
+    byte_length = len(data_part) // 2 #偶数文字であることが保障されている
+    return format(byte_length, '02X')
+
 if __name__ == "__main__":
     # ステップ1: MACアドレスを指定してペアリング
     target_mac = connect_and_pair(RFID_MAC_ADDRESS)
@@ -185,32 +224,36 @@ if __name__ == "__main__":
 
         # 任意のコマンドを実行する
         print("\n--- 任意のコマンドを実行する ---")
+        print("本来のパケットの中身の順序:[STX][アドレス][コマンド][データ長][データ部][ETX][SUM][CR]")
         print("ここではSTX、ETX、CRなど、毎回固定となる部分を自動的に補完し、簡易的にコマンドを生成できます")
-        print("アドレスは00hであることを前提として、SUMもマニュアルに基づいて自動計算します")
-        print("1バイト目はコマンド名で、第6章や第7章を参照のこと")
-        print("2バイト目はデータ長で、データ部の長さを記述してください")
-        print("3バイト目以降はデータ部で、データを記述してください")
+        print("アドレスは00hであることを前提として、SUMやデータ長もマニュアルに基づいて自動計算します")
+        print("コマンド名は、第6章や第7章を参照のこと")
+        print("データ部は、データを記述してください。空の場合はデータ長は00となります。")
         print("終了する場合はexitと入力してください")
 
         while True:
-            print("COMMAND:")
-            short_command = input().strip()
-
-            if short_command.lower() == "exit":
+            print("コマンド名:", end="")
+            command_name = input().strip()
+            command_name_status = is_validation_pass_command(command_name)
+            
+            if command_name_status == COMMANDSTATUS.EXIT:
                 break
-
-            if not short_command:
-                print("\nエラー: コマンドが入力されていないようです")
+            elif command_name_status == COMMANDSTATUS.REJECT:
                 continue
 
-            if not all(c in '0123456789ABCDEFabcdef' for c in short_command):
-                print("\nエラー: 16進数のみ入力してください（0-9, A-F）")
+            print("データ部:", end="")
+            data_part = input().strip()
+            data_part_status = is_validation_pass_data(data_part)
+            
+            if data_part_status == COMMANDSTATUS.EXIT:
+                break
+            if data_part_status == COMMANDSTATUS.REJECT:
+                print("もう一度入力し直してください")
                 continue
 
-            if len(short_command) < 4:
-                print("\n エラー: コマンドが短すぎるようです。最低4文字以上必要なはずです")
-                continue
+            data_length_part = generate_data_length_part(data_part)
 
+            short_command = command_name + data_length_part + data_part
             full_command = generate_full_rfid_command(short_command)
             send_rfid_command(ser, full_command)
 
