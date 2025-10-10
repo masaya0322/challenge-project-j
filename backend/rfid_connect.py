@@ -111,7 +111,8 @@ def send_rfid_command(ser, command_hex_string):
         
         # コマンド送信
         ser.write(command_bytes)
-        print(f"送信データ: {command_hex_string}")
+        formatted_command = format_hex_with_spaces(command_hex_string)
+        print(f"送信データ: {formatted_command}")
         
         # デバイスが処理するのを少し待つ
         time.sleep(0.2)
@@ -264,7 +265,6 @@ if __name__ == "__main__":
             short_command = command_name + data_length_part + data_part
             full_command = generate_full_rfid_command(short_command)
             formatted_full_command = format_hex_with_spaces(full_command)
-            print(f"以下のコマンドを送信します: {formatted_full_command}")
             send_rfid_command(ser, full_command)
 
             command_count += 1
