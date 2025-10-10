@@ -259,6 +259,8 @@ if __name__ == "__main__":
             full_command = generate_full_rfid_command(short_command)
             send_rfid_command(ser, full_command)
 
+            command_count += 1
+
     except serial.SerialException as e:
         print(f"シリアルポートのエラー: {e}")
         sys.exit(1)
