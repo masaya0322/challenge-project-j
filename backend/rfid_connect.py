@@ -231,8 +231,10 @@ if __name__ == "__main__":
         print("データ部は、データを記述してください。空の場合はデータ長は00となります。")
         print("終了する場合はexitと入力してください")
 
+        command_count = 1
         while True:
-            print("コマンド名:", end="")
+            print(f"\n <コマンド #{command_count}>")
+            print("コマンド名: ", end="")
             command_name = input().strip()
             command_name_status = is_validation_pass_command(command_name)
             
