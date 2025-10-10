@@ -95,6 +95,10 @@ def bind_rfcomm(port, mac_address):
         print(f"rfcommのバインドに失敗しました: {e}")
         return False
 
+def format_hex_with_spaces(hex_string):
+    """16進数文字列を2文字ごとに半角スペースで区切る"""
+    return ' '.join(hex_string[i:i+2] for i in range(0, len(hex_string), 2))
+
 def send_rfid_command(ser, command_hex_string):
     """開いているシリアルポート経由でコマンドを送信し、応答を待つ"""
     try:
@@ -116,8 +120,10 @@ def send_rfid_command(ser, command_hex_string):
         response_bytes = ser.read_until(b'\r') # b'\r' は 0x0D
         
         if response_bytes:
-            print(f"受信データ: {response_bytes.hex().upper()}")
-            return response_bytes.hex().upper()
+            response_bytes_hex_upper = response_bytes.hex().upper()
+            formatted_response = format_hex_with_spaces(response_bytes_hex_upper)
+            print(f"受信データ: {formatted_response}")
+            return formatted_response
         else:
             print("応答がありませんでした。")
             return None
@@ -257,6 +263,8 @@ if __name__ == "__main__":
 
             short_command = command_name + data_length_part + data_part
             full_command = generate_full_rfid_command(short_command)
+            formatted_full_command = format_hex_with_spaces(full_command)
+            print(f"以下のコマンドを送信します: {formatted_full_command}")
             send_rfid_command(ser, full_command)
 
             command_count += 1
