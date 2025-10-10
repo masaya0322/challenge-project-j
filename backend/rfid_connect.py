@@ -243,7 +243,7 @@ if __name__ == "__main__":
             elif command_name_status == COMMANDSTATUS.REJECT:
                 continue
 
-            print("データ部:", end="")
+            print("データ部: ", end="")
             data_part = input().strip()
             data_part_status = is_validation_pass_data(data_part)
             
