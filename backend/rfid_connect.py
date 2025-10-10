@@ -100,7 +100,7 @@ def format_hex_with_spaces(hex_string):
     return ' '.join(hex_string[i:i+2] for i in range(0, len(hex_string), 2))
 
 def send_rfid_command(ser, command_hex_string):
-    """開いているシリアルポート経由でコマンドを送信し、応答を待つ"""
+    """開いているシリアルポート経由でコマンドを送信し、応答を待つ（複数回受信対応）"""
     try:
         # 送受信バッファをクリア
         ser.reset_input_buffer()
@@ -117,17 +117,35 @@ def send_rfid_command(ser, command_hex_string):
         # デバイスが処理するのを少し待つ
         time.sleep(0.2)
         
-        # 応答受信（終端文字 0x0D まで読み込み）
-        response_bytes = ser.read_until(b'\r') # b'\r' は 0x0D
+        # 複数回の応答を受信
+        response_count = 0
+        responses = []
         
-        if response_bytes:
-            response_bytes_hex_upper = response_bytes.hex().upper()
-            formatted_response = format_hex_with_spaces(response_bytes_hex_upper)
-            print(f"受信データ: {formatted_response}")
-            return formatted_response
-        else:
+        while True:
+            # 応答受信（終端文字 0x0D まで読み込み、タイムアウトあり）
+            response_bytes = ser.read_until(b'\r')  # b'\r' は 0x0D
+            
+            if response_bytes:
+                response_count += 1
+                response_bytes_hex_upper = response_bytes.hex().upper()
+                formatted_response = format_hex_with_spaces(response_bytes_hex_upper)
+                print(f"受信データ #{response_count}: {formatted_response}")
+                responses.append(formatted_response)
+                
+                # 次の応答があるか少し待つ
+                time.sleep(0.1)
+            else:
+                # タイムアウトで応答がなければ終了
+                break
+        
+        if response_count == 0:
             print("応答がありませんでした。")
             return None
+        elif response_count == 1:
+            return responses[0]
+        else:
+            print(f"合計 {response_count} 件の応答を受信しました。")
+            return responses
 
     except serial.SerialException as e:
         print(f"シリアルポートのエラー: {e}")
