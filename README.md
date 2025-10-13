@@ -33,40 +33,77 @@ mainブランチの場合：git pull
 他ブランチの場合は相談すること
 ```
 
-## backendの初回起動
+## backendの起動方法
 前提
-パスはchallenge-project-jである
+- パスはchallenge-project-jであること
+- Docker Desktopが起動していること
 
-*初回実行時は以下の通り*
-初回実行時は、docker buildでコンテナを作成し、docker runを使ってそのコンテナを初回起動をする。
-※2回目以降の実行の場合は後述
+### 1. dockerとdocker-composeがインストールされているかを確認
 
-### 1.Dockerがインストールされていることを確認
+``` bash
 docker --version
-### 2.カレントディレクトリ移動
+docker-compose --version
+```
+
+### 2. カレントディレクトリを移動
+
+``` bash
 cd backend
-### 3.コンテナをビルド
-docker build -t cpj-backend-app .
-### 4.実行
-docker run -d -p 8000:8000 --name cpj-backend cpj-backend-app
-### 5.テスト
+```
+### 3. コンテナを作成
+初めてコンテナを作成する場合は、docker-composeを用いてbuildをする必要がある。3.1.に進む
+
+すでにコンテナを作成済みの場合は、docker-composeを用いて、コンテナを起動するだけで良い。3.2.に進む
+
+3.2.の方法だと、ターミナルが1つ占有される。バックグラウンドで起動したい場合は3.3.に進む
+
+### 3.1. 初めてコンテナを作成、起動する場合
+
+``` bash
+docker-compose up --build
+```
+
+### 3.2. コンテナを作成済みで起動する場合
+既存のコンテナを起動するだけなので、buildは不要。
+``` bash
+docker-compose up
+```
+
+### 3.3. バックエンドで起動する場合
+`docker-compose up`に`-d`オプションを追加する。
+コンテナ作成済みの場合
+``` bash
+docker-compose up -d
+```
+
+### 4. 動作確認
+別のターミナルを開き、
+
+``` bash
 curl http://localhost:8000/api/hello
+```
+を実行して、`Hello World`が帰ってくれば成功。
 
 ### コピー用
-```
+初めてコンテナを作成、起動する場合
+``` bash
 docker --version
+docker-compose --version
 cd backend
-docker build -t cpj-backend-app .
-docker run -d -p 8000:8000 --name cpj-backend cpj-backend-app
-curl http://localhost:8000/api/hello
+docker-compose up --build
 ```
-にアクセスすると、Hello Worldが返される
 
-## backendの2回目以降の起動
-2回目以降の起動の場合は、docker runで既存のコンテナをONにするだけでよく、ビルドはしなくても良い。
-※コード変更した場合は、改めてdocker buildとdocker runをする必要がある
+コンテナを作成済みで起動する場合
+``` bash
+cd backend
+docker-compose up
+```
 
-### dockerの起動
-docker start cpj-backend
+### コンテナを停止する
+フォアグラウンドで起動している場合は、`CTRL + C`で停止。
+バックグラウンドで起動している場合は、`docker-compose down`で停止。
 
-これでOK。
+### 備考
+- コード変更時に再ビルドする必要はない。（`docker-compose.yml`上で、`--reload`オプションを有効にしているため）
+- requirements.txtを変更した場合は、`docker-compose up --build`を再び行う必要がある
+- コンテナを削除して、もう一度ビルドし直したい場合は、`docker-compose down --rmi all`を実行して、`docker-composte up --build`を実行する
