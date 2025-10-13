@@ -9,6 +9,8 @@ from enum import Enum
 RFID_MAC_ADDRESS = "EC:62:60:C4:A8:36"  # 対象のRFIDリーダーのMACアドレス
 SERIAL_PORT = "/dev/rfcomm0"
 BAUD_RATE = 115200
+FIRST_TIMEOUT = 2.0
+READ_TIMEOUT = 0.2
 
 def connect_and_pair(mac_address):
     """指定されたMACアドレスのデバイスをスキャンで確認後、接続とペアリングを行う"""
@@ -101,6 +103,7 @@ def format_hex_with_spaces(hex_string):
 
 def send_rfid_command(ser, command_hex_string):
     """開いているシリアルポート経由でコマンドを送信し、応答を待つ（複数回受信対応）"""
+
     try:
         # 送受信バッファをクリア
         ser.reset_input_buffer()
@@ -114,14 +117,17 @@ def send_rfid_command(ser, command_hex_string):
         formatted_command = format_hex_with_spaces(command_hex_string)
         print(f"送信データ: {formatted_command}")
         
-        # デバイスが処理するのを少し待つ
-        time.sleep(0.2)
-        
         # 複数回の応答を受信
         response_count = 0
         responses = []
-        
-        while True:
+
+        while True:   
+            # 応答を受けた後は、タイムアウトまでの時間を短くする（処理速度を上げるため）
+            if response_count == 0:
+                ser.timeout = FIRST_TIMEOUT
+            else:
+                ser.timeout = READ_TIMEOUT
+
             # 応答受信（終端文字 0x0D まで読み込み、タイムアウトあり）
             response_bytes = ser.read_until(b'\r')  # b'\r' は 0x0D
             
@@ -131,13 +137,14 @@ def send_rfid_command(ser, command_hex_string):
                 formatted_response = format_hex_with_spaces(response_bytes_hex_upper)
                 print(f"受信データ #{response_count}: {formatted_response}")
                 responses.append(formatted_response)
-                
-                # 次の応答があるか少し待つ
-                time.sleep(0.1)
+
             else:
                 # タイムアウトで応答がなければ終了
                 break
         
+        # 念の為、コマンド受信後の待機時間を用意
+        time.sleep(0.2)
+
         if response_count == 0:
             print("応答がありませんでした。")
             return None
@@ -231,16 +238,13 @@ if __name__ == "__main__":
             bytesize=serial.EIGHTBITS,
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
-            timeout=2
+            timeout=FIRST_TIMEOUT
         )
 
         # コマンド送信（例：ROMバージョン読み取り）
         print("\n--- ROMバージョン読み取り ---")
         rom_version_command = "02004F019003E50D"
         send_rfid_command(ser, rom_version_command)
-
-        # コマンド間に十分な待機時間を設ける
-        time.sleep(1)
 
         # 他のコマンドも試せます（例：ブザー制御）
         print("\n--- ブザー制御 ---")
