@@ -35,7 +35,7 @@ mainブランチの場合：git pull
 
 ## backendの初回起動
 前提
-cdはchallenge-project-jである
+パスはchallenge-project-jである
 
 *初回実行時は以下の通り*
 初回実行時は、docker buildでコンテナを作成し、docker runを使ってそのコンテナを初回起動をする。
