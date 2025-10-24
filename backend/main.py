@@ -24,6 +24,14 @@ class RFIDTagResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class ScannedRFIDResponse(BaseModel):
+    id: int
+    rfid_tag: str
+    scanned_at: datetime
+    
+    class Config:
+        from_attributes = True
+
 @app.get("/api/hello")
 def test_hello():
     return {"message": "Hello World"}
@@ -70,3 +78,9 @@ def delete_rfid_tag(rfid_tag: str, db: Session = Depends(get_db)):
     db.delete(tag)
     db.commit()
     return {"message": "RFIDタグを削除しました"}
+
+# 現在スキャンされているRFIDタグ一覧を取得
+@app.get("/api/currently-scanned-tags", response_model=List[ScannedRFIDResponse])
+def get_currently_scanned_tags(db: Session = Depends(get_db)):
+    scanned_tags = db.query(ScannedRFID).all()
+    return scanned_tags
