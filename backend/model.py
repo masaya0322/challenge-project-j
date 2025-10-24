@@ -17,7 +17,7 @@ class RFIDTag(Base):
 
 class ScannedRFID(Base):
     """読み取られているRFIDタグ"""
-    __tablename__ = "scanned_rfids"
+    __tablename__ = "currently_scanned_tags"
     
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     rfid_tag = Column(String, ForeignKey("rfid_tags.rfid_tag"), nullable=False, index=True, comment="すべてのRFIDタグ一覧のRFID_tagに対応")
