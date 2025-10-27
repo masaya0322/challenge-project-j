@@ -1,7 +1,6 @@
 import sys
-import time
 from rfid_connect import establish_connection, SERIAL_PORT
-from rfid_test import send_rfid_command
+from rfid_utility import send_rfid_command
 
 def send_inventory_command(ser):
     """UHF_Inventoryコマンドを送信"""
