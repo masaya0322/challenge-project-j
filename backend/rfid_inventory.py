@@ -1,7 +1,11 @@
 import sys
+import time
 from rfid_connect import establish_connection, SERIAL_PORT
 from rfid_utility import send_rfid_command
 from rfid_tag import parse_inventory_response
+
+# --- 設定項目 ---
+INVENTORY_INTERVAL = 1.0  # Inventoryコマンド実行間隔（秒）
 
 def send_inventory_command(ser):
     """UHF_Inventoryコマンドを送信してタグ情報を取得"""
@@ -23,16 +27,31 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        # Inventoryコマンドを送信
-        response = send_inventory_command(ser)
+        print(f"\nInventoryコマンドを{INVENTORY_INTERVAL}秒間隔で実行します。")
+        print("終了するには Ctrl+C を押してください。\n")
         
-        if response and response.is_success():
-            print("\nInventoryコマンドが正常に実行されました。")
-            # タグ一覧を表示
-            response.print_tags()
-        else:
-            print("\nInventoryコマンドの実行に失敗しました。")
+        loop_count = 1
+        while True:
+            print(f"\n{'='*60}")
+            print(f"実行回数: {loop_count}")
+            print(f"{'='*60}")
+            
+            # Inventoryコマンドを送信
+            response = send_inventory_command(ser)
+            
+            if response and response.is_success():
+                # タグ一覧を表示
+                response.print_tags()
+            else:
+                print("\nInventoryコマンドの実行に失敗しました。")
+            
+            loop_count += 1
+            
+            # 次の実行まで待機
+            time.sleep(INVENTORY_INTERVAL)
 
+    except KeyboardInterrupt:
+        print("\n\nユーザーによって中断されました。")
     except Exception as e:
         print(f"エラーが発生しました: {e}")
     finally:
