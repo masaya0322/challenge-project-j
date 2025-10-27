@@ -26,8 +26,10 @@ if __name__ == "__main__":
         # Inventoryコマンドを送信
         response = send_inventory_command(ser)
         
-        if response:
+        if response and response.is_success():
             print("\nInventoryコマンドが正常に実行されました。")
+            # タグ一覧を表示
+            response.print_tags()
         else:
             print("\nInventoryコマンドの実行に失敗しました。")
 

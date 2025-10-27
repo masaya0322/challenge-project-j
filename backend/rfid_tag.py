@@ -133,6 +133,28 @@ class InventoryResponse:
         """読み取りが成功したかを返す"""
         return self.success
     
+    def print_tags(self):
+        """検出されたタグ一覧を整形して表示"""
+        if not self.tags:
+            print("\n=== タグ情報 ===")
+            print("タグが検出されませんでした。")
+            return
+        
+        print(f"\n=== タグ情報 ({len(self.tags)}枚検出) ===")
+        for i, tag in enumerate(self.tags, 1):
+            # PCをフォーマット
+            pc_formatted = ' '.join(tag.pc[j:j+2] for j in range(0, len(tag.pc), 2))
+            # EPCをフォーマット
+            epc_formatted = ' '.join(tag.epc[j:j+2] for j in range(0, len(tag.epc), 2))
+            
+            print(f"\n[タグ #{i}]")
+            if tag.rssi is not None:
+                print(f"  RSSI: {tag.rssi}")
+            print(f"  PC:   {pc_formatted}")
+            print(f"  EPC:  {epc_formatted}")
+        
+        print(f"\n合計: {self.total_count}枚")
+    
     def __str__(self):
         """レスポンス情報を文字列として表現"""
         return f"InventoryResponse(success={self.success}, tags={self.get_tag_count()}, total_count={self.total_count})"
