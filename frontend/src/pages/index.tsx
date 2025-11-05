@@ -1,4 +1,5 @@
-import TitleButton from "@/components/TitleButton";
+import React from "react";
+import GameButton from "../components/GameButton";
 
 export default function Home() {
   return (
@@ -11,10 +12,11 @@ export default function Home() {
         Tailwind CSS が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
       </p>
 
-      <TitleButton
-        value="スタート"
+      {/* ここがさっきのゲーム風STARTボタン */}
+      <GameButton
+        label="START"
         onChange={(v) => {
-          console.log("押されたボタン:", v);
+          console.log("clicked:", v);
         }}
       />
 
