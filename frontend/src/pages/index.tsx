@@ -12,7 +12,6 @@ export default function Home() {
         Tailwind CSS が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
       </p>
 
-      {/* ここがさっきのゲーム風STARTボタン */}
       <GameButton
         label="START"
         onChange={(v) => {
