@@ -3,8 +3,9 @@
 import { Button } from "@/components/ui/button";
 import  Layout  from "@/components/Layout";
 export default function Home() {
+  const TITLE_IMAGE_URL = "/images/title.jpg";
   return (
-    <Layout backgroundImageUrl={"/images/title.jpg"}>
+    <Layout backgroundImageUrl={TITLE_IMAGE_URL}>
       <div className="flex flex-col items-center justify-center min-h-screen p-6">
       
         <h1 className="text-6xl font-extrabold text-blue-600 mb-4 tracking-tight sm:text-7xl">
