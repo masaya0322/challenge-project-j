@@ -1,7 +1,7 @@
 import sys
 import time
-from rfid_connect import establish_connection, SERIAL_PORT
-from rfid_utility import send_rfid_command
+from backend.rfid_connect_util import establish_connection, SERIAL_PORT
+from backend.rfid_command_util import send_rfid_command
 from rfid_tag import parse_inventory_response
 
 # --- 設定項目 ---
