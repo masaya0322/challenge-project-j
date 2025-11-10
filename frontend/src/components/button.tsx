@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { Button as ShadcnButton} from "./ui/button";
 import { Press_Start_2P } from "next/font/google";
@@ -9,7 +8,7 @@ const pixelFont = Press_Start_2P({
   weight: "400",
 });
 
-type ButtonProps = {
+type Button = {
   label: string;
   onChange?: (value: string) => void;
   value?: string;
@@ -21,7 +20,7 @@ export default function Button({
   onChange,
   value,
   color = "#1F8BFF",
-}: ButtonProps) {
+}: Button) {
   const handleClick = () => {
     onChange?.(value ?? label);
   };
