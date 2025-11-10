@@ -1,5 +1,5 @@
 import React from "react";
-import GameButton from "../components/GameButton";
+import Titlebutton from "../components/button";
 
 export default function Home() {
   return (
@@ -7,12 +7,11 @@ export default function Home() {
       <h1 className="text-6xl font-extrabold text-blue-600 mb-4 tracking-tight sm:text-7xl">
         Hello Next.js World!
       </h1>
-
       <p className="text-xl text-gray-700 mb-8 max-w-lg text-center">
         Tailwind CSS が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
       </p>
 
-      <GameButton
+      <Titlebutton
         label="START"
         onChange={(v) => {
           console.log("clicked:", v);
