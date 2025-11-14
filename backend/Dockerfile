@@ -5,6 +5,7 @@ WORKDIR /app
 # ビルドに必要なパッケージをインストール
 RUN apt-get update && apt-get install -y \
     gcc \
+    libpq-dev \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
