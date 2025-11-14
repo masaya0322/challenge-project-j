@@ -15,7 +15,7 @@ type Button = {
   color?: string;
 };
 
-export function GameButton({
+export function Button({
   label,
   onChange,
   value,

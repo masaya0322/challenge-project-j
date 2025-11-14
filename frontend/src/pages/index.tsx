@@ -1,5 +1,6 @@
+//frontend/app/page.tsx
 import  Layout  from "@/components/Layout";
-import {GameButton} from "../components/button";
+import { Button } from "../components/button";
 
 export default function Home() {
   const TITLE_IMAGE_URL = "/images/title.jpg";
@@ -13,10 +14,9 @@ export default function Home() {
         <p className="text-xl text-gray-700 mb-8 max-w-lg text-center">
           Tailwind CSS が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
         </p>
-              <GameButton
+              <Button
         label="START"
         onChange={(v) => {
-          console.log("clicked:", v);
         }}
       />
         <footer className="mt-12 text-sm text-gray-400">
@@ -24,6 +24,5 @@ export default function Home() {
         </footer>
       </div>
     </Layout>
-
   );
 }
