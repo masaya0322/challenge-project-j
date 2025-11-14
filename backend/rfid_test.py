@@ -1,7 +1,7 @@
 import sys
 import serial
-from backend.rfid_connect_util import establish_connection, SERIAL_PORT
-from backend.rfid_command_util import (
+from rfid_connect_util import establish_connection, SERIAL_PORT
+from rfid_command_util import (
     send_rfid_command,
     generate_full_rfid_command,
     generate_data_length_part,
