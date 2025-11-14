@@ -70,18 +70,21 @@ class InventoryResponse:
         if len(data_part) < 2:
             return
         
-        # RSSIを取得（1バイト目）
-        rssi_hex = data_part[0:2]
+        # 1バイト目は詳細コマンド（09h）        
+        # RSSIを取得（2-3バイト目）
+        rssi_hex = data_part[2:6]
         rssi = int(rssi_hex, 16)
+
+        # 4バイト目はANGLE値（使わない）
         
-        # PC/EPC長を取得（2バイト目）
+        # PC/EPC長を取得（5バイト目）
         if len(data_part) < 4:
             return
         
-        pc_epc_length = int(data_part[2:4], 16)
+        pc_epc_length = int(data_part[8:10], 16) # 通常 0Eh
         
-        # PC/EPCデータを取得（3バイト目以降）
-        pc_epc_start = 4
+        # PC/EPCデータを取得（6バイト目以降）
+        pc_epc_start = 10
         pc_epc_end = pc_epc_start + (pc_epc_length * 2)
         
         if len(data_part) < pc_epc_end:
