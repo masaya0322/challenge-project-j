@@ -40,9 +40,7 @@ if __name__ == "__main__":
             response = send_inventory_command(ser)
             
             if response and response.is_success():
-                # タグ一覧を表示
                 response.print_tags()
-                print(response.get_tags())
             else:
                 print("\nInventoryコマンドの実行に失敗しました。")
             
