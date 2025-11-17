@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { Button as ShadcnButton} from "./ui/button";
 import { Press_Start_2P } from "next/font/google";
 
@@ -10,19 +9,15 @@ const pixelFont = Press_Start_2P({
 
 type Button = {
   label: string;
-  onChange?: (value: string) => void;
-  value?: string;
-  color?: string;
+  onClick: () => void;
 };
 
 export function Button({
   label,
-  onChange,
-  value,
-  color = "#1F8BFF",
+  onClick,
 }: Button) {
   const handleClick = () => {
-    onChange?.(value ?? label);
+    onClick?.();
   };
 
   return (
@@ -45,7 +40,8 @@ export function Button({
           transition
           active:translate-y-[2px]
         `}
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: "#1F8BFF"
+         }}
       >
         {label.toUpperCase()}
       </ShadcnButton>

@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <Layout backgroundImageUrl={TITLE_IMAGE_URL}>
       <div className="flex flex-col items-center justify-center min-h-screen p-6">
-
+      
         <h1 className="text-6xl font-extrabold text-blue-600 mb-4 tracking-tight sm:text-7xl">
           Hello Next.js World!
         </h1>
@@ -16,8 +16,7 @@ export default function Home() {
         </p>
               <Button
         label="START"
-        onChange={(v) => {
-        }}
+        onClick={() => {}}
       />
         <footer className="mt-12 text-sm text-gray-400">
           Next.js + pnpm + Tailwind
