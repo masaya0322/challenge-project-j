@@ -40,6 +40,8 @@ def delete_old_scanned_records(db: Session, seconds: int = 10):
     Returns:
         int: 削除されたレコード数
     """
+
+    print(f"現在の時刻: {datetime.now()}")
     threshold_time = datetime.now() - timedelta(seconds=seconds)
     
     # 削除対象のレコードを取得
