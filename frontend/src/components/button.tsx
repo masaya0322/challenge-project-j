@@ -40,7 +40,6 @@ export function Button({ label, onClick }: Button) {
       </ShadcnButton>
 
       <div className="absolute -bottom-2 left-0 right-0 h-4 bg-[#0a5aa0] rounded-b-xl" />
-
       <div className="absolute -bottom-1 left-4 right-4 h-1 bg-white rounded-full opacity-90 pointer-events-none" />
     </div>
   );
