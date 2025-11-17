@@ -1,3 +1,5 @@
+# RFIDタグを管理するためのクラス
+
 from typing import List, Optional
 from dataclasses import dataclass
 

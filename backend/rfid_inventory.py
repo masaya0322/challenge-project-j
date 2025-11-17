@@ -1,3 +1,5 @@
+# Inventoryコマンド（RFIDタグの受信）を定期的に実行する部分
+
 import sys
 import time
 from rfid_connect_util import establish_connection, SERIAL_PORT

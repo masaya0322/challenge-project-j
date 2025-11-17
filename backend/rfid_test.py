@@ -1,3 +1,5 @@
+# RFID機器に対して任意のコマンドを送ることができる
+
 import sys
 import serial
 from rfid_connect_util import establish_connection, SERIAL_PORT

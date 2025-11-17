@@ -1,3 +1,5 @@
+# RFID機器とRaspberry Pi機器の接続部分で役に立つUtility
+
 import pexpect
 import subprocess
 import time

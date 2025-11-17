@@ -1,3 +1,5 @@
+# RFID機器に対してコマンドを送信する際に役に立つUtility
+
 import time
 import serial
 from enum import Enum
