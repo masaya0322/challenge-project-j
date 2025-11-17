@@ -88,15 +88,17 @@ def handle_rfid_tag_scanned(rfid_tag_id: str, db: Session, default_name: str = "
         existing_tag = new_tag
         is_new = True
         print(f"新しいRFIDタグを登録しました: {rfid_tag_id}")
-    
+    else:
+        print(f"既存のRFIDタグです: {rfid_tag_id}")
+
     # 2. currently_scanned_tagsに常に新しいレコードを追加（履歴として蓄積）
     # 10秒間で3個以上のような条件判定のため、読み取り履歴を保存
     scanned_record = ScannedRFID(rfid_tag=rfid_tag_id)
     db.add(scanned_record)
     db.commit()
     db.refresh(scanned_record)
-    print(f"新しいスキャンレコードを作成しました: {rfid_tag_id} at {scanned_record.scanned_at}")
-    
+    print(f"新しいスキャンレコードとして記録しました: {rfid_tag_id} at {scanned_record.scanned_at}")
+
     return {
         "is_new": is_new,
         "rfid_tag": existing_tag,
