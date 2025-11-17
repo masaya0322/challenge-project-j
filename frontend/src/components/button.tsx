@@ -14,14 +14,10 @@ type Button = {
 };
 
 export function Button({ label, onClick }: Button) {
-  const handleClick = () => {
-    onClick?.();
-  };
-
-  return (
+   return (
     <div className="relative inline-block">
       <ShadcnButton
-        onClick={handleClick}
+        onClick={onClick}
         variant="default"
         className={`
           ${pixelFont.className}
