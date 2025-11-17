@@ -41,8 +41,8 @@ def delete_old_scanned_records(db: Session, seconds: int = 10):
     Returns:
         int: 削除されたレコード数
     """
-
-    now_utc = datetime.now(timezone.utc)
+    # UTCでタイムゾーン情報なしのdatetimeを取得（PostgreSQLと互換性のため）
+    now_utc = datetime.utcnow()
     print(f"現在の時刻(UTC): {now_utc}")
     threshold_time = now_utc - timedelta(seconds=seconds)
     
