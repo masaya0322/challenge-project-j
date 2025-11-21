@@ -5,7 +5,7 @@ import time
 from utility.rfid_connect import establish_connection, SERIAL_PORT
 from utility.rfid_command import send_rfid_command
 from model import parse_inventory_response
-from database import SessionLocal
+from db_connect import SessionLocal
 from utility.database import process_and_save_tags, delete_old_scanned_records
 
 # --- 設定項目 ---

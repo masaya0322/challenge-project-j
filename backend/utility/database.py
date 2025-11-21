@@ -5,7 +5,7 @@
 from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 from model import RFIDTag, ScannedRFID
-from main import handle_rfid_tag_scanned
+from api_server import handle_rfid_tag_scanned
 
 def print_database_status(db: Session):
     """現在のデータベース状態を表示する"""

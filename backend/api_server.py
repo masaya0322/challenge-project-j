@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import get_db, engine, Base
+from db_connect import get_db, engine, Base
 from model import RFIDTag, ScannedRFID
 from pydantic import BaseModel
 from datetime import datetime

@@ -4,7 +4,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from database import Base
+from db_connect import Base
 
 class RFIDTag(Base):
     """すべてのRFIDタグ一覧"""
