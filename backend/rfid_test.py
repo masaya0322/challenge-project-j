@@ -2,8 +2,8 @@
 
 import sys
 import serial
-from utility.rfid_connect_util import establish_connection, SERIAL_PORT
-from utility.rfid_command_util import (
+from utility.rfid_connect import establish_connection, SERIAL_PORT
+from utility.rfid_command import (
     send_rfid_command,
     generate_full_rfid_command,
     generate_data_length_part,
