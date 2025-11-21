@@ -4,7 +4,7 @@ import sys
 import time
 from utility.rfid_connect_util import establish_connection, SERIAL_PORT
 from utility.rfid_command_util import send_rfid_command
-from rfid_tag import parse_inventory_response
+from model import parse_inventory_response
 from database import SessionLocal
 from utility.database_util import process_and_save_tags, delete_old_scanned_records
 
