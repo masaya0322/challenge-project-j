@@ -1,4 +1,3 @@
-# RFID機器とRaspberry Pi機器の接続部分で役に立つUtility
 
 import pexpect
 import subprocess
@@ -6,8 +5,7 @@ import time
 import sys
 import serial
 
-# --- 設定項目 ---
-RFID_MAC_ADDRESS = "EC:62:60:C4:A8:36"  # 対象のRFIDリーダーのMACアドレス
+RFID_MAC_ADDRESS = "EC:62:60:C4:A8:36"
 SERIAL_PORT = "/dev/rfcomm0"
 BAUD_RATE = 115200
 
@@ -18,15 +16,12 @@ def connect_and_pair(mac_address):
         return None
 
     try:
-        # bluetoothctlを起動
         child = pexpect.spawn('bluetoothctl', encoding='utf-8')
         print("bluetoothctlを起動しました。")
 
-        # スキャンしてデバイスの存在を確認
         print("デバイスをスキャン中...")
         child.sendline('scan on')
         try:
-            # MACアドレスが含まれる行を待つ（タイムアウトは30秒）
             child.expect(f'Device {mac_address}', timeout=30)
             print(f"デバイス {mac_address} を発見しました。")
         except pexpect.exceptions.TIMEOUT:
@@ -34,14 +29,11 @@ def connect_and_pair(mac_address):
             child.sendline('quit')
             return None
         finally:
-            # スキャン停止
             child.sendline('scan off')
         
-        # ペアリング
         print(f"{mac_address} とペアリングします...")
         child.sendline(f'pair {mac_address}')
         
-        # 複数の応答パターンを待つ
         patterns = [
             'Request confirmation',                         # 0: Confirmation needed
             'Failed to pair: org.bluez.Error.AlreadyExists',# 1: Already paired
@@ -49,13 +41,13 @@ def connect_and_pair(mac_address):
         ]
         i = child.expect(patterns, timeout=15)
         
-        if i == 0: # Confirmation needed
+        if i == 0:
             print("確認リクエストを検出しました。")
-            # パスキープロンプトを待つ (正規表現を使用)
+
             child.expect(r'\[agent\] Confirm passkey \d+ \(yes/no\):', timeout=10)
             print("パスキーの確認プロンプトを検出しました。'yes'を送信します。")
             child.sendline('yes')
-            # 'yes'を送信後、ペアリング成功のメッセージを待つ
+
             child.expect('Pairing successful', timeout=10)
             print("ペアリング成功。")
         elif i == 1: # Already paired
@@ -63,12 +55,10 @@ def connect_and_pair(mac_address):
         elif i == 2: # Pairing successful
             print("ペアリング成功。")
 
-        # 信頼済みデバイスに設定
         child.sendline(f'trust {mac_address}')
         child.expect('trust succeeded', timeout=10)
         print("信頼済みデバイスに設定しました。")
 
-        # 終了
         child.sendline('quit')
         return mac_address
 
@@ -83,11 +73,9 @@ def bind_rfcomm(port, mac_address):
     """MACアドレスを仮想シリアルポートにバインドする"""
     print(f"{mac_address} を {port} にバインドします...")
     try:
-        # 既存のバインドを解放（念のため）
         subprocess.run(['sudo', 'rfcomm', 'release', port], check=False)
         time.sleep(1)
-        
-        # 新しくバインド
+
         subprocess.run(['sudo', 'rfcomm', 'bind', port, mac_address, '1'], check=True)
         print("バインドに成功しました。")
         time.sleep(2) # デバイスファイルが安定するのを待つ
@@ -125,21 +113,18 @@ def send_buzzer_command(ser):
 
 def establish_connection():
     """RFIDリーダーとの接続を確立し、シリアルポートを返す"""
-    # ステップ1: ペアリング
+
     target_mac = connect_and_pair(RFID_MAC_ADDRESS)
     if not target_mac:
         return None
         
-    # ステップ2: rfcommのバインド
     if not bind_rfcomm(SERIAL_PORT, target_mac):
         return None
 
-    # ステップ3: シリアルポートを開く
     ser = open_serial_port(SERIAL_PORT, BAUD_RATE)
     if not ser:
         return None
 
-    # ステップ4: ブザーで接続完了を通知
     send_buzzer_command(ser)
     
     return ser
