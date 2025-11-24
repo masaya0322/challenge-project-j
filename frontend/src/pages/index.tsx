@@ -1,4 +1,3 @@
-//frontend/app/page.tsx
 import Layout from "@/components/Layout";
 import { Button } from "../components/button";
 
