@@ -1,7 +1,4 @@
-"""
-データベース操作のユーティリティ関数
-データベースのタイムゾーンはUTCである
-"""
+
 from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 from model import RFIDTag, ScannedRFID
@@ -46,7 +43,6 @@ def delete_old_scanned_records(db: Session, seconds: int = 10):
     print(f"現在の時刻(UTC): {now_utc}")
     threshold_time = now_utc - timedelta(seconds=seconds)
     
-    # 削除対象のレコードを取得
     old_records = db.query(ScannedRFID).filter(
         ScannedRFID.scanned_at < threshold_time
     ).all()
@@ -54,7 +50,6 @@ def delete_old_scanned_records(db: Session, seconds: int = 10):
     deleted_count = len(old_records)
     
     if deleted_count > 0:
-        # レコードを削除
         db.query(ScannedRFID).filter(
             ScannedRFID.scanned_at < threshold_time
         ).delete()
@@ -84,7 +79,6 @@ def process_and_save_tags(inventory_response, db: Session):
             # EPCをRFIDタグIDとして使用
             rfid_tag_id = tag.epc
             
-            # データベースに登録
             print(f"\n--- 次のタグの処理を開始します: {rfid_tag_id} ---")
             result = handle_rfid_tag_scanned(rfid_tag_id, db)
             
@@ -95,7 +89,6 @@ def process_and_save_tags(inventory_response, db: Session):
         
         print(f"\n合計 {len(tags)} 件のタグを正常に処理しました")
         
-        # データベースの現在の状態を表示
         print_database_status(db)
     
     except Exception as e:
