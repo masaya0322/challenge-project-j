@@ -1,5 +1,3 @@
-# RFID機器に対して任意のコマンドを送ることができる
-
 import sys
 import serial
 from utility.rfid_connect import establish_connection, SERIAL_PORT
@@ -13,19 +11,16 @@ from utility.rfid_command import (
 )
 
 if __name__ == "__main__":
-    # 接続確立
     ser = establish_connection()
     if not ser:
         print("接続の確立に失敗しました。")
         sys.exit(1)
 
     try:
-        # コマンド送信（例：ROMバージョン読み取り）
         print("\n--- ROMバージョン読み取り ---")
         rom_version_command = "02004F019003E50D"
         send_rfid_command(ser, rom_version_command)
 
-        # 任意のコマンドを実行する
         print("\n--- 任意のコマンドを実行する ---")
         print("本来のパケットの中身の順序:[STX][アドレス][コマンド][データ長][データ部][ETX][SUM][CR]")
         print("ここではSTX、ETX、CRなど、毎回固定となる部分を自動的に補完し、簡易的にコマンドを生成できます")
