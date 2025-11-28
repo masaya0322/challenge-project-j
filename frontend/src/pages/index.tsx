@@ -1,5 +1,5 @@
 import { Layout } from "@/components/layout";
-import { Button } from "../components/button";
+import { Button } from "@/components/button";
 
 export default function Home() {
   const TITLE_IMAGE_URL = "/images/title.jpg";
