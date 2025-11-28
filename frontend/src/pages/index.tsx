@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import { Button } from "../components/button";
+import { ModeSelect } from "@/components/mode-select";
 
 export default function Home() {
   const TITLE_IMAGE_URL = "/images/title.jpg";
@@ -14,6 +15,11 @@ export default function Home() {
           が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
         </p>
         <Button label="START" onClick={() => {}} />
+        {}
+        <div className="mt-12">
+          <ModeSelect />
+        </div>
+        {}
         <footer className="mt-12 text-sm text-gray-400">
           Next.js + pnpm + Tailwind
         </footer>
