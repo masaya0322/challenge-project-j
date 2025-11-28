@@ -22,9 +22,7 @@ export function Button({ label, onClick }: Button) {
         className={`
           ${pixelFont.className}
           relative z-10
-          h-16
-          px-16
-          rounded-xl
+          p-8
           text-white
           text-xl
           tracking-[0.25em]
@@ -38,8 +36,7 @@ export function Button({ label, onClick }: Button) {
       >
         {label.toUpperCase()}
       </ShadcnButton>
-      <div className="absolute -bottom-2 left-0 right-0 h-4 bg-[#0a5aa0] rounded-b-xl" />
-      <div className="absolute -bottom-1 left-4 right-4 h-1 bg-white rounded-full opacity-90 pointer-events-none" />
+      <div className="absolute -bottom-1 left-0 right-0 h-4 bg-white rounded-b" />
     </div>
   );
 }
