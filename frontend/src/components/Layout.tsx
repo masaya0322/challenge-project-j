@@ -4,7 +4,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout: FC<LayoutProps> = ({ children, backgroundImageUrl }) => {
+export const Layout: FC<LayoutProps> = ({ children, backgroundImageUrl }) => {
   const backgroundStyle: React.CSSProperties = backgroundImageUrl
     ? {
         backgroundImage: `url(${backgroundImageUrl})`,
@@ -22,5 +22,3 @@ const Layout: FC<LayoutProps> = ({ children, backgroundImageUrl }) => {
 
   return <div style={backgroundStyle}>{children}</div>;
 };
-
-export default Layout;
