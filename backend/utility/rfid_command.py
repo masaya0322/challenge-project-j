@@ -45,21 +45,40 @@ def send_rfid_command(ser, command_hex_string):
         print(f"シリアルポートのエラー: {e}")
         return None
 
-def generate_full_rfid_command(short_command):
-    """短縮コマンドからフルコマンドを生成"""
-    hex_list = [short_command[i:i+2] for i in range(0, len(short_command), 2)]
+def generate_full_rfid_command(command_name, data_part):
+    """
+    コマンド名とデータ部からフルコマンドを生成
+
+    入力されたコマンド名とデータ部を基に、通信プロトコルに必要な
+    ヘッダー、アドレス、データ長、チェックサム、フッターなどを付与して
+    完全なコマンド文字列を生成します。
+
+    Args:
+        command_name (str): 2文字の16進数コマンド名（例: "18"）
+        data_part (str): 16進数データ文字列（例: "0102"）。空文字も可。
+
+    Returns:
+        str: 送信用のフルコマンド文字列。
+             構成: STX("02") + アドレス("00") + コマンド + データ長 + データ + ETX("03") + チェックサム + CR("0D")
+    """
     STX_HEX = "02"
     ADDRESS_HEX = "00"
-    command_hex = hex_list[0]
-    data_length_hex = hex_list[1]
-    data_hex_list = hex_list[2:]
+    data_length_hex = generate_data_length_part(data_part)
+    
+    # データ部を2文字ごとのリストに変換
+    data_hex_list = [data_part[i:i+2] for i in range(0, len(data_part), 2)]
+    
     ETX_HEX = "03"
     checksum = 0
-    for hex_byte in [STX_HEX, ADDRESS_HEX, command_hex, data_length_hex, *data_hex_list, ETX_HEX]:
+    
+    # チェックサム計算対象: STX, ADDRESS, COMMAND, LENGTH, DATA, ETX
+    for hex_byte in [STX_HEX, ADDRESS_HEX, command_name, data_length_hex, *data_hex_list, ETX_HEX]:
         checksum += int(hex_byte, 16)
+        
     checksum_hex = f"{checksum & 0xFF:02X}"
     CR_HEX = "0D"
-    full_command = [STX_HEX, ADDRESS_HEX, command_hex, data_length_hex, *data_hex_list, ETX_HEX, checksum_hex, CR_HEX]
+    
+    full_command = [STX_HEX, ADDRESS_HEX, command_name, data_length_hex, *data_hex_list, ETX_HEX, checksum_hex, CR_HEX]
     command_string = "".join(full_command)
     return command_string
 

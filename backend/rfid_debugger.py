@@ -4,7 +4,6 @@ from utility.rfid_connect import establish_connection, SERIAL_PORT
 from utility.rfid_command import (
     send_rfid_command,
     generate_full_rfid_command,
-    generate_data_length_part,
     is_validation_pass_command,
     is_validation_pass_data,
     COMMANDSTATUS
@@ -51,10 +50,7 @@ if __name__ == "__main__":
                 print("もう一度入力し直してください")
                 continue
 
-            data_length_part = generate_data_length_part(data_part)
-
-            short_command = command_name + data_length_part + data_part
-            full_command = generate_full_rfid_command(short_command)
+            full_command = generate_full_rfid_command(command_name, data_part)
             send_rfid_command(ser, full_command)
 
             command_count += 1
