@@ -1,23 +1,91 @@
-import { Layout } from "@/components/layout";
-import { Button } from "@/components/button";
+import { useState } from "react";
+import { ScreenType, GameState } from "@/types/game";
+import { TitleScreen } from "@/components/screens/TitleScreen";
+import { ModeSelectScreen } from "@/components/screens/ModeSelectScreen";
+import { TimerSettingScreen } from "@/components/screens/TimerSettingScreen";
+import { TimerRunningScreen } from "@/components/screens/TimerRunningScreen";
+import { StageScreen } from "@/components/screens/StageScreen";
+import { ResultScreen } from "@/components/screens/ResultScreen";
 
-export default function Home() {
-  const TITLE_IMAGE_URL = "/images/title.jpg";
-  return (
-    <Layout backgroundImageUrl={TITLE_IMAGE_URL}>
-      <div className="flex flex-col items-center justify-center min-h-screen p-6">
-        <h1 className="text-6xl font-extrabold text-blue-600 mb-4 tracking-tight sm:text-7xl">
-          Hello Next.js World!
-        </h1>
-        <p className="text-xl text-gray-700 mb-8 max-w-lg text-center">
-          Tailwind CSS
-          が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
-        </p>
-        <Button label="START" onClick={() => {}} />
-        <footer className="mt-12 text-sm text-gray-400">
-          Next.js + pnpm + Tailwind
-        </footer>
-      </div>
-    </Layout>
-  );
+function GamePage() {
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>("title");
+  const [gameState, setGameState] = useState<GameState>({
+    score: 0,
+    toysCollected: 0,
+    currentStage: 1,
+    timerSettings: { hours: 0, minutes: 0, seconds: 0 },
+  });
+
+  const resetGame = () => {
+    setGameState({
+      score: 0,
+      toysCollected: 0,
+      currentStage: 1,
+      timerSettings: { hours: 0, minutes: 0, seconds: 0 },
+    });
+    setCurrentScreen("title");
+  };
+
+  const handleStageComplete = () => {
+    if (gameState.currentStage < 3) {
+      setGameState({ ...gameState, currentStage: gameState.currentStage + 1 });
+    } else {
+      setCurrentScreen("result");
+    }
+  };
+
+  switch (currentScreen) {
+    case "title":
+      return <TitleScreen onStart={() => setCurrentScreen("mode-select")} />;
+
+    case "mode-select":
+      return (
+        <ModeSelectScreen
+          onCleanNow={() => setCurrentScreen("stage")}
+          onSetTime={() => setCurrentScreen("timer-setting")}
+        />
+      );
+
+    case "timer-setting":
+      return (
+        <TimerSettingScreen
+          timerSettings={gameState.timerSettings}
+          onTimerUpdate={(settings) =>
+            setGameState({ ...gameState, timerSettings: settings })
+          }
+          onStart={() => setCurrentScreen("timer-running")}
+          onBack={() => setCurrentScreen("mode-select")}
+        />
+      );
+
+    case "timer-running":
+      return (
+        <TimerRunningScreen
+          timerSettings={gameState.timerSettings}
+          onComplete={() => setCurrentScreen("stage")}
+        />
+      );
+
+    case "stage":
+      return (
+        <StageScreen
+          gameState={gameState}
+          onScoreUpdate={(newScore) =>
+            setGameState({ ...gameState, score: newScore })
+          }
+          onToysUpdate={(newToys) =>
+            setGameState({ ...gameState, toysCollected: newToys })
+          }
+          onStageComplete={handleStageComplete}
+        />
+      );
+
+    case "result":
+      return <ResultScreen gameState={gameState} onRestart={resetGame} />;
+
+    default:
+      return null;
+  }
 }
+
+export default GamePage;
