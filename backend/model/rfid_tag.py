@@ -30,19 +30,31 @@ class InventoryResponse:
     
     def _parse_responses(self):
         for response in self.raw_responses:
-            hex_data = response.replace(" ", "")
-            if len(hex_data) < 16:
+            try:
+                hex_data = response.replace(" ", "")
+                if len(hex_data) < 16:
+                    continue
+                stx = hex_data[0:2]
+                if stx != "02":
+                    continue
+
+                address = hex_data[2:4]
+                command = hex_data[4:6]
+                data_length = int(hex_data[6:8], 16)
+
+                # データ長の整合性チェック
+                # ヘッダー(8文字) + データ部(data_length * 2)
+                expected_min_length = 8 + (data_length * 2)
+                if len(hex_data) < expected_min_length:
+                    continue
+
+                if command == "6C":
+                    self._parse_tag_data(hex_data, data_length)
+                elif command == "30":
+                    self._parse_completion_response(hex_data, data_length)
+            except Exception:
+                print("フォーマットが正しくないため、このタグはパース途中でスキップされました")
                 continue
-            stx = hex_data[0:2]
-            address = hex_data[2:4]
-            command = hex_data[4:6]
-            data_length = int(hex_data[6:8], 16)
-            if stx != "02":
-                continue
-            if command == "6C":
-                self._parse_tag_data(hex_data, data_length)
-            elif command == "30":
-                self._parse_completion_response(hex_data, data_length)
     
     def _parse_tag_data(self, hex_data: str, data_length: int):
         data_start = 8
