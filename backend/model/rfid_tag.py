@@ -52,8 +52,8 @@ class InventoryResponse:
                     self._parse_tag_data(hex_data, data_length)
                 elif command == "30":
                     self._parse_completion_response(hex_data, data_length)
-            except Exception:
-                print("フォーマットが正しくないため、このタグはパース途中でスキップされました")
+            except Exception as e:
+                print(f"フォーマットが正しくないため、このタグはパース途中でスキップされました: {e}")
                 continue
     
     def _parse_tag_data(self, hex_data: str, data_length: int):
