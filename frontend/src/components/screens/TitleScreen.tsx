@@ -1,5 +1,5 @@
 import { Button } from "@/components/button";
-import { Layout } from "@/components/Layout";
+import { Layout } from "@/components/layout";
 
 export function TitleScreen() {
   const TITLE_IMAGE_URL = "/images/title.jpg";
