@@ -7,7 +7,7 @@ class RFIDTag(Base):
     """RFIDタグ一覧"""
     __tablename__ = "rfid_tags"
     rfid_tag = Column(String, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, default="未登録のおもちゃ")
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     scanned_records = relationship("ScannedRFID", back_populates="rfid_tag_relation")
 
