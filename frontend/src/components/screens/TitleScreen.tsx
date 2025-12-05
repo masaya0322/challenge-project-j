@@ -1,7 +1,7 @@
 import { Button } from "@/components/button";
 import { Layout } from "@/components/layout";
 
-export function TitleScreen() {
+export const TitleScreen = () => {
   const TITLE_IMAGE_URL = "/images/title.jpg";
   return (
     <Layout backgroundImageUrl={TITLE_IMAGE_URL}>
