@@ -8,10 +8,12 @@ from utility.database import process_and_save_tags, delete_old_scanned_records
 
 INVENTORY_INTERVAL = 1.0
 
+# UHF Inventory command: Scans for RFID tags in range
+INVENTORY_COMMAND = "0200550110036B0D"
+
 def send_inventory_command(ser):
-    inventory_command = "0200550110036B0D"
     print("--- UHF_Inventory コマンド送信 ---")
-    response = send_rfid_command(ser, inventory_command)
+    response = send_rfid_command(ser, INVENTORY_COMMAND)
     
     if response:
         inventory_response = parse_inventory_response(response)
