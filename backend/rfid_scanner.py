@@ -28,7 +28,11 @@ if __name__ == "__main__":
     # アンテナ設定の変更 (Ant0: OFF, Ant1: ON)
     antenna_command = generate_antenna_setting_command(enable_ant0=False, enable_ant1=True)
     print("\n--- アンテナ設定変更 (Ant0: OFF, Ant1: ON) ---")
-    send_rfid_command(ser, antenna_command)
+    response = send_rfid_command(ser, antenna_command)
+
+    if not response:
+        print("警告: アンテナ設定の変更に失敗しました。")
+        sys.exit(1)
 
     try:
         print(f"\nInventoryコマンドを{INVENTORY_INTERVAL}秒間隔で実行します。")
