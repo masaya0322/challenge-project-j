@@ -34,7 +34,7 @@ def send_rfid_command(ser, command_hex_string):
                 break
         time.sleep(0.2)
         if response_count == 0:
-            print("応答がありませんでした。")
+            print(f"応答がありませんでした。送信コマンド: {formatted_command}, タイムアウト: {FIRST_TIMEOUT}秒")
             return None
         elif response_count == 1:
             return responses[0]
