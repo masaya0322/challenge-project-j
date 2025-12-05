@@ -73,10 +73,10 @@ def bind_rfcomm(port, mac_address):
     """MACアドレスを仮想シリアルポートにバインドする"""
     print(f"{mac_address} を {port} にバインドします...")
     try:
-        subprocess.run(['sudo', 'rfcomm', 'release', port], check=False)
+        subprocess.run(['rfcomm', 'release', port], check=False)
         time.sleep(1)
 
-        subprocess.run(['sudo', 'rfcomm', 'bind', port, mac_address, '1'], check=True)
+        subprocess.run(['rfcomm', 'bind', port, mac_address, '1'], check=True)
         print("バインドに成功しました。")
         time.sleep(2) # デバイスファイルが安定するのを待つ
         return True
