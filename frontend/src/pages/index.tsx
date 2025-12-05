@@ -8,12 +8,12 @@ import { ScreenType } from "@/types/game";
 import { useState } from "react";
 
 const GamePage = () => {
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('title')
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('title');
 
   switch (currentScreen) {
     case "title":
       // タイトル画面
-      return <TitleScreen onStart={() => setCurrentScreen('mode-select')}/>;
+      return <TitleScreen onStart={() => setCurrentScreen('mode-select')}/>
 
     case "mode-select":
       // モード選択画面
