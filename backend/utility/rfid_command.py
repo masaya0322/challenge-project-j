@@ -105,7 +105,7 @@ def is_validation_pass_command(command_name):
         return COMMANDSTATUS.REJECT
     return COMMANDSTATUS.PASS
 
-def is_validation_pass_data(data_part):
+def validate_data_part(data_part):
     """データ部のバリデーション"""
     if data_part.lower() == "exit":
         return COMMANDSTATUS.EXIT
