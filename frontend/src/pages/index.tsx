@@ -5,13 +5,15 @@ import { TimerRunningScreen } from "@/components/screens/TimerRunningScreen";
 import { StageScreen } from "@/components/screens/StageScreen";
 import { ResultScreen } from "@/components/screens/ResultScreen";
 import { ScreenType } from "@/types/game";
+import { useState } from "react";
 
 const GamePage = () => {
-  const currentScreen: ScreenType = "result" as ScreenType;
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('title')
+
   switch (currentScreen) {
     case "title":
       // タイトル画面
-      return <TitleScreen />;
+      return <TitleScreen onStart={() => setCurrentScreen('mode-select')}/>;
 
     case "mode-select":
       // モード選択画面
