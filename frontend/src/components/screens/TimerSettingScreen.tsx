@@ -1,5 +1,5 @@
 import { Layout } from "@/components/layout";
-import { TimerDisplay } from "../timer/timer-display";
+import { TimerDisplay } from "@/components/timer/timer-display";
 
 export const TimerSettingScreen = () => {
   return (
