@@ -8,35 +8,27 @@ import { ScreenType } from "@/types/game";
 import { useState } from "react";
 
 const GamePage = () => {
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('title');
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>("title");
 
   switch (currentScreen) {
     case "title":
       // タイトル画面
-      return <TitleScreen onStart={() => setCurrentScreen('mode-select')}/>
+      return <TitleScreen onStart={() => setCurrentScreen("mode-select")} />;
 
     case "mode-select":
       // モード選択画面
-      return (
-        <ModeSelectScreen />
-      );
+      return <ModeSelectScreen />;
     case "timer-setting":
       // タイマー設定画面
-      return (
-        <TimerSettingScreen />
-      );
+      return <TimerSettingScreen />;
 
     case "timer-running":
       // タイマー進行中画面
-      return (
-        <TimerRunningScreen />
-      );
+      return <TimerRunningScreen />;
 
     case "stage":
       // ゲームステージ画面
-      return (
-        <StageScreen />
-      );
+      return <StageScreen />;
 
     case "result":
       // 結果画面
@@ -45,6 +37,6 @@ const GamePage = () => {
     default:
       return null;
   }
-}
+};
 
 export default GamePage;
