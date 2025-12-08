@@ -82,6 +82,35 @@ def generate_full_rfid_command(command_name, data_part):
     command_string = "".join(full_command)
     return command_string
 
+def generate_antenna_setting_command(enable_ant0=True, enable_ant1=False, enable_ant2=False, enable_ant3=False):
+    """
+    アンテナ有効化設定コマンドを生成
+
+    Args:
+        enable_ant0 (bool): アンテナ0の有効化 (Default: True)
+        enable_ant1 (bool): アンテナ1の有効化 (Default: False)
+        enable_ant2 (bool): アンテナ2の有効化 (Default: False)
+        enable_ant3 (bool): アンテナ3の有効化 (Default: False)
+    
+    Returns:
+        str: アンテナ設定変更用のフルコマンド文字列
+    """
+    antenna_bits = 0
+    if enable_ant0:
+        antenna_bits |= 1  # bit 0
+    if enable_ant1:
+        antenna_bits |= 2  # bit 1
+    if enable_ant2:
+        antenna_bits |= 4  # bit 2
+    if enable_ant3:
+        antenna_bits |= 8  # bit 3
+    
+    xx_hex = f"{antenna_bits:02X}"
+    # データ部: 33 00 00 80 XX 00 00 00
+    data_part = f"33000080{xx_hex}000000"
+    
+    return generate_full_rfid_command("55", data_part)
+
 def generate_data_length_part(data_part):
     """データ部からデータ長を計算"""
     byte_length = len(data_part) // 2

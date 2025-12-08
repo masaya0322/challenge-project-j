@@ -1,6 +1,6 @@
-import { Layout } from "@/components/Layout";
+import { Layout } from "@/components/layout";
 
-export const StageScreen =() => {
+export const StageScreen = () => {
   const currentPage: number = 1; 
   const getStageName = () => {
     switch (currentPage) {

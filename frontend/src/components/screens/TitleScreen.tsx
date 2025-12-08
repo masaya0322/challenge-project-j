@@ -1,4 +1,4 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout";
 
 type TitleScreenProps = {
@@ -14,11 +14,12 @@ export const TitleScreen = ({ onStart }: TitleScreenProps) => {
         <h1 className="text-6xl font-extrabold text-blue-600 mb-4 tracking-tight sm:text-7xl">
           Hello Next.js World!
         </h1>
+
         <p className="text-xl text-gray-700 mb-8 max-w-lg text-center">
           Tailwind CSS
           が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
         </p>
-        <Button label="START" onClick={onStart} />
+        <Button onClick={onStart}>START</Button>
         <footer className="mt-12 text-sm text-gray-400">
           Next.js + pnpm + Tailwind
         </footer>
