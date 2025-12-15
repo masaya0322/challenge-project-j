@@ -1,25 +1,24 @@
 import { Layout } from "@/components/layout";
 import { TimerDisplay } from "@/components/timer/timer-display";
 import { Button } from "@/components/button";
-import { useState, useCallback, useMemo} from "react";
+import { useCallback, useMemo} from "react";
 
 type TimerSettingProps = {
   onTop: () => void;
   onStart: () => void;
+  time: { seconds: number };
+  setTime: (time: { seconds: number }) => void;
 }
 
-export const TimerSettingScreen = ({onStart,onTop} : TimerSettingProps) => {
-  const [time, setTime] = useState({seconds: 0 });
+export const TimerSettingScreen = ({onStart, onTop, time, setTime} : TimerSettingProps) => {
   const updateTime = useCallback((deltaSeconds: number) => {
-    setTime(prevTime => {
-      const currentTotalSeconds = prevTime.seconds;
-      let newTotalSeconds = currentTotalSeconds + deltaSeconds;
-      if (newTotalSeconds < 0) {
-        newTotalSeconds = 0;
-      }
-      return {seconds: newTotalSeconds};
-    });
-  }, []);
+    const currentTotalSeconds = time.seconds;
+    let newTotalSeconds = currentTotalSeconds + deltaSeconds;
+    if (newTotalSeconds < 0) {
+      newTotalSeconds = 0;
+    }
+    setTime({seconds: newTotalSeconds});
+  }, [time, setTime]);
   const incrementSecond = (seconds :number) => updateTime(seconds);
   const incrementMinute = (minutes :number) => updateTime(minutes * 60);
   const incrementHour = (hours :number) => updateTime(hours * 3600);
@@ -28,15 +27,7 @@ export const TimerSettingScreen = ({onStart,onTop} : TimerSettingProps) => {
   const decrementHour = (hours :number) => updateTime(-hours * 3600);
   const handleReset = useCallback(() => {
     setTime({ seconds: 0 });
-  }, []);
-
-  const handleStart = useCallback(() => {
-    alert("タイマーを開始します！（ロジック未実装）");
-  }, []);
-  
-  const handleTop = useCallback(() => {
-    alert("トップへ戻ります！（ロジック未実装）");
-  }, []);
+  }, [setTime]);
 
   const { displayHours, displayMinutes, displaySeconds } = useMemo(() => {
     const hours = Math.floor(time.seconds / 3600);
@@ -72,7 +63,7 @@ export const TimerSettingScreen = ({onStart,onTop} : TimerSettingProps) => {
         </div>
         <div className="space-x-8 m-4">
           <Button label="RESET" onClick={handleReset}/>
-          <Button label="START" onClick={onStart}/>
+          <Button label="START" onClick={onStart} disabled={time.seconds === 0}/>
           <Button label="TOP" onClick={onTop}/>
         </div>
         <p className="text-xl text-gray-700 mb-8 max-w-lg text-center">
