@@ -9,6 +9,7 @@ import { useState } from "react";
 
 const GamePage = () => {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('timer-setting');
+  const [time, setTime] = useState({ seconds: 0 });
 
   switch (currentScreen) {
     case "title":
@@ -23,13 +24,22 @@ const GamePage = () => {
     case "timer-setting":
       // タイマー設定画面
       return (
-        <TimerSettingScreen onTop={() => setCurrentScreen('title')} onStart={() => setCurrentScreen('timer-running')}/>
+        <TimerSettingScreen
+          onTop={() => setCurrentScreen('title')}
+          onStart={() => setCurrentScreen('timer-running')}
+          time={time}
+          setTime={setTime}
+        />
       );
 
     case "timer-running":
       // タイマー進行中画面
       return (
-        <TimerRunningScreen />
+        <TimerRunningScreen
+          time={time}
+          setTime={setTime}
+          onComplete={() => setCurrentScreen('stage')}
+        />
       );
 
     case "stage":
