@@ -1,8 +1,56 @@
 import { Layout } from "@/components/layout";
 import { TimerDisplay } from "@/components/timer/timer-display";
 import { Button } from "@/components/button";
+import { useState, useCallback, useMemo} from "react";
 
-export const TimerSettingScreen = () => {
+type TimerSettingProps = {
+  onTop: () => void;
+  onStart: () => void;
+}
+
+export const TimerSettingScreen = ({onStart,onTop} : TimerSettingProps) => {
+  const [time, setTime] = useState({seconds: 0 });
+  const updateTime = useCallback((deltaSeconds: number) => {
+    setTime(prevTime => {
+      const currentTotalSeconds = prevTime.seconds;
+      let newTotalSeconds = currentTotalSeconds + deltaSeconds;
+      if (newTotalSeconds < 0) {
+        newTotalSeconds = 0;
+      }
+      return {seconds: newTotalSeconds};
+    });
+  }, []);
+  const incrementSecond = (seconds :number) => updateTime(seconds);
+  const incrementMinute = (minutes :number) => updateTime(minutes * 60);
+  const incrementHour = (hours :number) => updateTime(hours * 3600);
+  const decrementSecond = (seconds :number) => updateTime(-seconds);
+  const decrementMinute = (minutes :number) => updateTime(-minutes * 60);
+  const decrementHour = (hours :number) => updateTime(-hours * 3600);
+  const handleReset = useCallback(() => {
+    setTime({ seconds: 0 });
+  }, []);
+
+  const handleStart = useCallback(() => {
+    alert("タイマーを開始します！（ロジック未実装）");
+  }, []);
+  
+  const handleTop = useCallback(() => {
+    alert("トップへ戻ります！（ロジック未実装）");
+  }, []);
+
+  const { displayHours, displayMinutes, displaySeconds } = useMemo(() => {
+    const hours = Math.floor(time.seconds / 3600);
+    const remainingAfterHours = time.seconds % 3600;
+    const minutes = Math.floor(remainingAfterHours / 60);
+    const seconds = remainingAfterHours % 60;
+    
+    return {
+      displayHours: String(hours).padStart(2, '0'),
+      displayMinutes: String(minutes).padStart(2, '0'),
+      displaySeconds: String(seconds).padStart(2, '0')
+    };
+  }, [time.seconds]);
+  
   return (
     <Layout >
       <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-700">
@@ -10,22 +58,22 @@ export const TimerSettingScreen = () => {
           タイマー設定画面です。
         </h1>
         <div className="space-x-8 m-4">
-          <Button label="+1h" onClick={() => (null)}/>
-          <Button label="+10m" onClick={() => (null)}/>
-          <Button label="+1m" onClick={() => (null)}/>
-          <Button label="+10s" onClick={() => (null)}/>
+          <Button label="+1h" onClick={() => incrementHour(1)}/>
+          <Button label="+10m" onClick={() => incrementMinute(10)}/>
+          <Button label="+1m" onClick={() => incrementMinute(1)}/>
+          <Button label="+10s" onClick={() => incrementSecond(10)}/>
         </div>
-        <TimerDisplay hour="00" minute="00" second="00"/>
+        <TimerDisplay hour={displayHours} minute={displayMinutes} second={displaySeconds}/>
         <div className="space-x-8 m-4">
-          <Button label="-1h" onClick={() => (null)}/>
-          <Button label="-10m" onClick={() => (null)}/>
-          <Button label="-1m" onClick={() => (null)}/>
-          <Button label="-10s" onClick={() => (null)}/>
+          <Button label="-1h" onClick={() => decrementHour(1)}/>
+          <Button label="-10m" onClick={() => decrementMinute(10)}/>
+          <Button label="-1m" onClick={() => decrementMinute(1)}/>
+          <Button label="-10s" onClick={() => decrementSecond(10)}/>
         </div>
         <div className="space-x-8 m-4">
-          <Button label="RESET" onClick={() => (null)}/>
-          <Button label="START" onClick={() => (null)}/>
-          <Button label="TOP" onClick={() => (null)}/>
+          <Button label="RESET" onClick={handleReset}/>
+          <Button label="START" onClick={onStart}/>
+          <Button label="TOP" onClick={onTop}/>
         </div>
         <p className="text-xl text-gray-700 mb-8 max-w-lg text-center">
           Tailwind CSS

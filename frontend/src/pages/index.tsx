@@ -8,7 +8,7 @@ import { ScreenType } from "@/types/game";
 import { useState } from "react";
 
 const GamePage = () => {
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('title');
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('timer-setting');
 
   switch (currentScreen) {
     case "title":
@@ -23,7 +23,7 @@ const GamePage = () => {
     case "timer-setting":
       // タイマー設定画面
       return (
-        <TimerSettingScreen />
+        <TimerSettingScreen onTop={() => setCurrentScreen('title')} onStart={() => setCurrentScreen('timer-running')}/>
       );
 
     case "timer-running":
