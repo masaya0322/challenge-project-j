@@ -11,20 +11,20 @@ const pixelFont = Press_Start_2P({
 type Button = {
   label: string;
   onClick: () => void;
+  disabled?: boolean;
 };
 
-export function Button({ label, onClick }: Button) {
+export function Button({ label, onClick, disabled = false }: Button) {
   return (
     <div className="relative inline-block">
       <ShadcnButton
         onClick={onClick}
+        disabled={disabled}
         variant="default"
         className={`
           ${pixelFont.className}
           relative z-10
-          h-16
-          px-16
-          rounded-xl
+          p-8
           text-white
           text-xl
           tracking-[0.25em]
@@ -33,13 +33,13 @@ export function Button({ label, onClick }: Button) {
           cursor-pointer
           transition
           active:translate-y-[2px]
+          ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
         `}
         style={{ backgroundColor: "#1F8BFF" }}
       >
         {label.toUpperCase()}
       </ShadcnButton>
-      <div className="absolute -bottom-2 left-0 right-0 h-4 bg-[#0a5aa0] rounded-b-xl" />
-      <div className="absolute -bottom-1 left-4 right-4 h-1 bg-white rounded-full opacity-90 pointer-events-none" />
+      <div className="absolute -bottom-1 left-0 right-0 h-4 bg-white rounded-b" />
     </div>
   );
 }
