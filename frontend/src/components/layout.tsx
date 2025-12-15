@@ -11,7 +11,7 @@ export const Layout: FC<LayoutProps> = ({ children, backgroundImageUrl }) => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        minHeight: "100vh",
+        height: "100%",
         width: "100%",
       }
     : {
