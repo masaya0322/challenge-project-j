@@ -9,7 +9,6 @@ type TimerRunningProps = {
 }
 
 export const TimerRunningScreen = ({ time, setTime, onComplete }: TimerRunningProps) => {
-  // カウントダウンのロジック
   useEffect(() => {
     if (time.seconds <= 0) {
       return;
@@ -18,7 +17,6 @@ export const TimerRunningScreen = ({ time, setTime, onComplete }: TimerRunningPr
     const intervalId = setInterval(() => {
       setTime({ seconds: time.seconds - 1 });
 
-      // 0になったらStageScreenに遷移
       if (time.seconds - 1 <= 0) {
         clearInterval(intervalId);
         onComplete();
