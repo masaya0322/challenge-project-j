@@ -18,18 +18,6 @@ def update_game_progress(db: Session):
     # そこに含まれるユニークなrfid_tagの数をカウントする
     tidied_toys = db.query(ScannedRFID.rfid_tag).distinct().count()
     
-    # 3. 未完了のおもちゃの数を計算
-    # 論理的にマイナスにならないようにmax(0, ...)を使う（基本的にはあり得ないが念のため）
-    remaining_toys = max(0, total_toys - tidied_toys)
-    
-    # 4. 達成率を計算
-    progress_rate = 0.0
-    if total_toys > 0:
-        progress_rate = (tidied_toys / total_toys) * 100.0
-        # 小数点第2位などで丸めることも可能だが、一旦そのまま保存するか、必要なら丸める
-        # ここでは扱いやすさのため、小数点第1位くらいまでにするなどの考慮もありうるが、
-        # floatなのでそのままでもよい。表示側で丸めるのが一般的。
-    
     # GameProgressテーブルのレコードを取得（なければ作成）
     # シングルトンとして扱うため、最初のレコードを取得するか、常にID=1を使う
     game_progress = db.query(GameProgress).first()
@@ -37,19 +25,15 @@ def update_game_progress(db: Session):
     if not game_progress:
         game_progress = GameProgress(
             total_toys=total_toys,
-            tidied_toys=tidied_toys,
-            remaining_toys=remaining_toys,
-            progress_rate=progress_rate
+            tidied_toys=tidied_toys
         )
         db.add(game_progress)
-        print(f"GameProgressを作成しました: Total={total_toys}, Tidied={tidied_toys}, Rate={progress_rate:.1f}%")
+        print(f"GameProgressを作成しました: Total={total_toys}, Tidied={tidied_toys}")
     else:
         game_progress.total_toys = total_toys
         game_progress.tidied_toys = tidied_toys
-        game_progress.remaining_toys = remaining_toys
-        game_progress.progress_rate = progress_rate
         game_progress.updated_at = datetime.utcnow()
-        # print(f"GameProgressを更新しました: Total={total_toys}, Tidied={tidied_toys}, Rate={progress_rate:.1f}%")
+        # print(f"GameProgressを更新しました: Total={total_toys}, Tidied={tidied_toys}")
     
     db.commit()
     db.refresh(game_progress)
