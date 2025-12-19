@@ -67,10 +67,12 @@ def get_currently_scanned_tags(db: Session = Depends(get_db)):
 def get_progress(db: Session = Depends(get_db)):
     return get_game_progress(db)
 
+@app.get("/api/game/reset")
 @app.post("/api/game/reset")
 def reset_game_progress(db: Session = Depends(get_db)):
     """
     ゲームの進行状況をリセットする
+    (GET/POST両対応)
     - スキャン履歴(ScannedRFID)を全削除
     - 進行状況(GameProgress)をリセット
     """
