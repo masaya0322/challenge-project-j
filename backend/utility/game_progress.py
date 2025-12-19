@@ -16,7 +16,7 @@ def update_game_progress(db: Session):
     # 2. 現在片付けが完了している（＝直近でスキャンされた）おもちゃの数を取得
     # ScannedRFIDテーブルには直近のスキャン履歴が残っているため、
     # そこに含まれるユニークなrfid_tagの数をカウントする
-    tidied_toys = db.query(ScannedRFID.rfid_tag).distinct().count()
+    cleaned_toys = db.query(ScannedRFID.rfid_tag).distinct().count()
     
     # GameProgressテーブルのレコードを取得（なければ作成）
     # シングルトンとして扱うため、最初のレコードを取得するか、常にID=1を使う
@@ -25,15 +25,14 @@ def update_game_progress(db: Session):
     if not game_progress:
         game_progress = GameProgress(
             total_toys=total_toys,
-            tidied_toys=tidied_toys
+            cleaned_toys=cleaned_toys
         )
         db.add(game_progress)
-        print(f"GameProgressを作成しました: Total={total_toys}, Tidied={tidied_toys}")
+        print(f"GameProgressを作成しました: Total={total_toys}, Cleaned={cleaned_toys}")
     else:
         game_progress.total_toys = total_toys
-        game_progress.tidied_toys = tidied_toys
-        game_progress.updated_at = datetime.utcnow()
-        # print(f"GameProgressを更新しました: Total={total_toys}, Tidied={tidied_toys}")
+        game_progress.cleaned_toys = cleaned_toys
+        # print(f"GameProgressを更新しました: Total={total_toys}, Cleaned={cleaned_toys}")
     
     db.commit()
     db.refresh(game_progress)

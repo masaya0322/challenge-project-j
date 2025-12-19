@@ -10,6 +10,4 @@ class GameProgress(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     
     total_toys = Column(Integer, default=0, nullable=False)        # 登録されているおもちゃの数
-    tidied_toys = Column(Integer, default=0, nullable=False)       # 片付けが完了しているおもちゃの数
-    
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    cleaned_toys = Column(Integer, default=0, nullable=False)      # 片付けが完了しているおもちゃの数

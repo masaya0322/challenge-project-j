@@ -33,8 +33,7 @@ class ScannedRFIDResponse(BaseModel):
 
 class GameProgressResponse(BaseModel):
     total_toys: int
-    tidied_toys: int
-    updated_at: datetime
+    cleaned_toys: int
     
     class Config:
         from_attributes = True
