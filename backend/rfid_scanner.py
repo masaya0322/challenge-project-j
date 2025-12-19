@@ -5,6 +5,7 @@ from utility.rfid_command import send_rfid_command, generate_antenna_setting_com
 from model import parse_inventory_response
 from db_connect import SessionLocal
 from utility.database import process_and_save_tags, delete_old_scanned_records
+from utility.game_progress import update_game_progress
 
 INVENTORY_INTERVAL = 1.0
 
@@ -57,6 +58,10 @@ if __name__ == "__main__":
                     process_and_save_tags(response, db)
                 finally:
                     delete_old_scanned_records(db, seconds=10)
+                    
+                    # ゲーム進行状況の更新
+                    update_game_progress(db)
+                    
                     db.close()
             else:
                 print("\nInventoryコマンドの実行に失敗しました。")
