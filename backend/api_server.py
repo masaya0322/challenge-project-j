@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db_connect import get_db, engine, Base
 from model import RFIDTag, ScannedRFID
+from utility.game_progress import get_game_progress
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List
@@ -30,6 +31,13 @@ class ScannedRFIDResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class GameProgressResponse(BaseModel):
+    total_toys: int
+    cleaned_toys: int
+    
+    class Config:
+        from_attributes = True
+
 @app.get("/api/hello")
 def test_hello():
     return {"message": "Hello World"}
@@ -54,6 +62,10 @@ def get_rfid_tag(rfid_tag: str, db: Session = Depends(get_db)):
 def get_currently_scanned_tags(db: Session = Depends(get_db)):
     scanned_tags = db.query(ScannedRFID).all()
     return scanned_tags
+
+@app.get("/api/game/progress", response_model=GameProgressResponse)
+def get_progress(db: Session = Depends(get_db)):
+    return get_game_progress(db)
 
 def handle_rfid_tag_scanned(rfid_tag_id: str, db: Session, default_name: str = "未登録のおもちゃ"):
     """
