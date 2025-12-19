@@ -1,5 +1,6 @@
 import { Button } from "@/components/button";
 import { Layout } from "@/components/layout";
+import { Logo } from "@/components/logo";
 
 type TitleScreenProps = {
   onStart: () => void
@@ -7,21 +8,16 @@ type TitleScreenProps = {
 
 export const TitleScreen = ({ onStart }: TitleScreenProps) => {
   const TITLE_IMAGE_URL = "/images/title.jpg";
-  
+
   return (
     <Layout backgroundImageUrl={TITLE_IMAGE_URL}>
-      <div className="flex flex-col items-center justify-center min-h-screen p-6">
-        <h1 className="text-6xl font-extrabold text-blue-600 mb-4 tracking-tight sm:text-7xl">
-          Hello Next.js World!
-        </h1>
-        <p className="text-xl text-gray-700 mb-8 max-w-lg text-center">
-          Tailwind CSS
-          が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
-        </p>
-        <Button label="START" onClick={onStart} />
-        <footer className="mt-12 text-sm text-gray-400">
-          Next.js + pnpm + Tailwind
-        </footer>
+      <div className="flex flex-col items-center min-h-screen p-4 md:p-5 lg:p-6">
+        <div className="mt-16 md:mt-24 lg:mt-32 mb-auto">
+          <Logo />
+        </div>
+        <div className="mb-8 md:mb-12 lg:mb-16">
+          <Button label="START" onClick={onStart} />
+        </div>
       </div>
     </Layout>
   );
