@@ -1,19 +1,24 @@
 import { Layout } from "@/components/layout";
+import { Button } from "@/components/button";
+import { dodGothicFont } from "@/utils/fonts";
 
-export const ModeSelectScreen = () => {
+type ModeSelectScreenProps = {
+  onPlayNowButtonClick: () => void;
+  onTimerSettingButtonClick: () => void;
+}
+
+export const ModeSelectScreen = ( {onPlayNowButtonClick,onTimerSettingButtonClick} : ModeSelectScreenProps) => {
+  const TITLE_IMAGE_URL = "/images/title.jpg";
   return (
-    <Layout >
-      <div className="flex flex-col items-center justify-center min-h-screen p-6">
-        <h1 className="text-6xl font-extrabold text-blue-600 mb-4 tracking-tight sm:text-7xl">
-          モード選択画面です。
+    <Layout backgroundImageUrl={TITLE_IMAGE_URL}>
+      <div className="flex flex-col items-center justify-center min-h-screen gap-16 p-6">
+        <h1 className={`${dodGothicFont.className} text-6xl font-extrabold tracking-tight sm:text-7xl`}>
+          モードを選んでね！
         </h1>
-        <p className="text-xl text-gray-700 mb-8 max-w-lg text-center">
-          Tailwind CSS
-          が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
-        </p>
-        <footer className="mt-12 text-sm text-gray-400">
-          Next.js + pnpm + Tailwind
-        </footer>
+        <div className="flex gap-16">
+          <Button label="PLAY NOW" onClick={onPlayNowButtonClick} />
+          <Button label="TIMER SETTING" onClick={onTimerSettingButtonClick} />
+        </div>
       </div>
     </Layout>
   );

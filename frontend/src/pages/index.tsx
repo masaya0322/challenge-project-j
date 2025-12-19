@@ -19,7 +19,7 @@ const GamePage = () => {
     case "mode-select":
       // モード選択画面
       return (
-        <ModeSelectScreen />
+        <ModeSelectScreen onPlayNowButtonClick={() => setCurrentScreen('stage')} onTimerSettingButtonClick={() => setCurrentScreen('timer-setting')}/>
       );
     case "timer-setting":
       // タイマー設定画面
