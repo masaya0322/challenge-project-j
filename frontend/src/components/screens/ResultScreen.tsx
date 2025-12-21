@@ -1,19 +1,19 @@
 import { Layout } from "@/components/layout";
+import { Button } from "@/components/button";
+import { pixelFont } from "@/utils/fonts";
 
-export const ResultScreen = () => { 
+export const ResultScreen = () => {
   return (
-    <Layout >
-      <div className="flex flex-col items-center justify-center min-h-screen p-6">
-        <h1 className="text-6xl font-extrabold text-blue-600 mb-4 tracking-tight sm:text-7xl">
-          リザルト画面です。
+    <Layout>
+      <div className="flex flex-col items-center justify-center min-h-screen p-6" style={{ backgroundColor: "#3E5F8A" }}>
+        <h1
+          className={`${pixelFont.className} text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-16 md:mb-24 tracking-wider`}
+        >
+          RESULT
         </h1>
-        <p className="text-xl text-gray-700 mb-8 max-w-lg text-center">
-          Tailwind CSS
-          が有効化されています。ここからあなたの素晴らしい開発を始めましょう。
-        </p>
-        <footer className="mt-12 text-sm text-gray-400">
-          Next.js + pnpm + Tailwind
-        </footer>
+        <div className="mt-auto mb-16 md:mb-24">
+          <Button label="TOP" onClick={() => {}} />
+        </div>
       </div>
     </Layout>
   );
