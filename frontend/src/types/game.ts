@@ -5,3 +5,8 @@ export type ScreenType =
   | "timer-running"
   | "stage"
   | "result";
+
+export type GameState = {
+  score: number;
+  toysCollected?: number;
+};
