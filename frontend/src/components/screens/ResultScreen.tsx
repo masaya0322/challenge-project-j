@@ -13,15 +13,15 @@ export const ResultScreen = ({ gameState, onBackToTitle }: ResultScreenProps) =>
     <Layout>
       <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: "#3E5F8A" }}>
         <h1
-          className={`${pixelFont.className} text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 md:mb-12 tracking-wider`}
+          className={`${pixelFont.className} text-4xl md:text-5xl lg:text-6xl font-bold text-white m-4 tracking-wider`}
         >
           RESULT
         </h1>
 
         {gameState && (
-          <div className="mb-12 md:mb-16">
+          <div>
             <p
-              className={`${pixelFont.className} text-5xl md:text-6xl lg:text-7xl font-bold text-white text-center`}
+              className={`${pixelFont.className} text-5xl md:text-6xl lg:text-7xl font-bold text-white text-center m-4`}
             >
               SCORE: {gameState.score}
             </p>

@@ -8,7 +8,7 @@ import { ScreenType, GameState } from "@/types/game";
 import { useState } from "react";
 
 const GamePage = () => {
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('title');
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('result');
   const [time, setTime] = useState({ seconds: 0 });
   const [gameState, setGameState] = useState<GameState>({ score: 85 });
 
