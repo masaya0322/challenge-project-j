@@ -4,12 +4,13 @@ import { TimerSettingScreen } from "@/components/screens/TimerSettingScreen";
 import { TimerRunningScreen } from "@/components/screens/TimerRunningScreen";
 import { StageScreen } from "@/components/screens/StageScreen";
 import { ResultScreen } from "@/components/screens/ResultScreen";
-import { ScreenType } from "@/types/game";
+import { ScreenType, GameState } from "@/types/game";
 import { useState } from "react";
 
 const GamePage = () => {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('result');
   const [time, setTime] = useState({ seconds: 0 });
+  const [gameState, setGameState] = useState<GameState>({ score: 85 });
 
   switch (currentScreen) {
     case "title":
@@ -50,7 +51,12 @@ const GamePage = () => {
 
     case "result":
       // 結果画面
-      return <ResultScreen />;
+      return (
+        <ResultScreen
+          gameState={gameState}
+          onBackToTitle={() => setCurrentScreen('title')}
+        />
+      );
 
     default:
       return null;
