@@ -4,11 +4,40 @@ import { TimerSettingScreen } from "@/components/screens/TimerSettingScreen";
 import { TimerRunningScreen } from "@/components/screens/TimerRunningScreen";
 import { StageScreen } from "@/components/screens/StageScreen";
 import { ResultScreen } from "@/components/screens/ResultScreen";
-import { ScreenType, GameState } from "@/types/game";
+import { ScreenType, GameState, GameProgress } from "@/types/game";
 import { useState } from "react";
+import type { GetServerSideProps } from "next";
+import { getGameProgress } from "@/lib/api/game";
 
-const GamePage = () => {
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('result');
+type GamePageProps = {
+  initialGameProgress: GameProgress;
+};
+
+export const getServerSideProps: GetServerSideProps<GamePageProps> = async () => {
+  try {
+    const progress = await getGameProgress();
+
+    return {
+      props: {
+        initialGameProgress: progress,
+      },
+    };
+  } catch (error) {
+    console.error("Failed to fetch initial game progress:", error);
+
+    return {
+      props: {
+        initialGameProgress: {
+          total_toys: 0,
+          cleaned_toys: 0,
+        },
+      },
+    };
+  }
+};
+
+const GamePage = ({ initialGameProgress }: GamePageProps) => {
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('title');
   const [time, setTime] = useState({ seconds: 0 });
   const [gameState, setGameState] = useState<GameState>({ score: 85 });
 
