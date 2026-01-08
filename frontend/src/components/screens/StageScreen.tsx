@@ -47,21 +47,16 @@ type StageScreenProps = {
 
 export const StageScreen = ({ gameState, onComplete }: StageScreenProps) => {
   const [showTitle, setShowTitle] = useState(true);
-  
-  // 現在のスコア（おもちゃの数）
   const cleanedCount = gameState?.cleanedToys || 0;
 
-// 【重要】3個ごとにステージ番号を計算するロジック
-  // 0~2個: index 0, 3~5個: index 1, 6個~: index 2
   const currentStageIndex = useMemo(() => {
     const calculatedIndex = Math.floor(cleanedCount / 3);
-    // 配列の長さを超えないように調整（最大で最後のステージを表示）
     return Math.min(calculatedIndex, STAGES.length - 1);
   }, [cleanedCount]);
 
   const currentStage = STAGES[currentStageIndex];
 
-  // ステージが変わるたびにタイトルを表示する
+  // ステージが「実際に切り替わった時」だけタイトルを表示する
   useEffect(() => {
     setShowTitle(true);
     const timer = setTimeout(() => {
@@ -69,44 +64,39 @@ export const StageScreen = ({ gameState, onComplete }: StageScreenProps) => {
     }, STAGE_TITLE_DISPLAY_TIME);
 
     return () => clearTimeout(timer);
-  }, [currentStageIndex]);
+  }, [currentStageIndex]); // ここは currentStageIndex の変化を監視
 
-  // 全てのおもちゃが片付いたら完了（親に通知）
-  // ※ GamePage側のuseEffectでも判定していますが、ここでもケアしておくと安全です。
-
-  if (showTitle) {
-    return (
-      <Layout>
-        <StageTitle stageName={currentStage.name} />
-      </Layout>
-    );
-  }
-
+  // 修正ポイント：タイトルとメイン画面を「切り替え」ではなく「重ねる」か「条件分岐を整理」する
   return (
     <Layout backgroundImageUrl={currentStage.backgroundImageURL}>
-      <div className="flex flex-col items-center justify-between min-h-screen w-screen h-screen p-6 animate-fade-in">
-        {/* スコア表示（デバッグ用・または演出用） */}
-        <div className="absolute top-4 right-4 bg-white/80 p-2 rounded-lg font-bold">
-          おもちゃ: {cleanedCount} / {gameState?.totalToys}
-        </div>
+      {showTitle ? (
+        // タイトル表示中
+        <StageTitle stageName={currentStage.name} />
+      ) : (
+        // メインのゲーム画面
+        <div className="flex flex-col items-center justify-between min-h-screen w-screen h-screen p-6 animate-fade-in">
+          {/* 進捗デバッグ表示 */}
+          <div className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded">
+            Score: {cleanedCount}
+          </div>
 
-        <div className="flex-1 flex items-center justify-center w-full max-w-4xl">
-          <div className={`relative w-full h-full ${currentStage.animation}`}>
-            <Image
-              src={currentStage.characterURL}
-              alt={currentStage.name}
-              fill
-              className="object-contain"
-              priority
-              unoptimized
-            />
+          <div className="flex-1 flex items-center justify-center w-full max-w-4xl">
+            <div className={`relative w-96 h-96 ${currentStage.animation}`}>
+              <Image
+                src={currentStage.characterURL}
+                alt={currentStage.name}
+                fill
+                className="object-contain"
+                priority
+                unoptimized
+              />
+            </div>
+          </div>
+          <div className="w-full mb-16">
+            <StageMessage message={currentStage.message} />
           </div>
         </div>
-        
-        <div className="w-full mb-16">
-          <StageMessage message={currentStage.message} />
-        </div>
-      </div>
+      )}
     </Layout>
   );
 };
