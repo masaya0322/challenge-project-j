@@ -51,11 +51,12 @@ export const StageScreen = ({ gameState, onComplete }: StageScreenProps) => {
   // 現在のスコア（おもちゃの数）
   const cleanedCount = gameState?.cleanedToys || 0;
 
-  // 現在のスコアに最適なステージを計算
+// 【重要】3個ごとにステージ番号を計算するロジック
+  // 0~2個: index 0, 3~5個: index 1, 6個~: index 2
   const currentStageIndex = useMemo(() => {
-    // 条件に合う（requiredToysを満たす）最大のインデックスを探す
-    const index = STAGES.findLastIndex(s => cleanedCount >= s.requiredToys);
-    return index !== -1 ? index : 0;
+    const calculatedIndex = Math.floor(cleanedCount / 3);
+    // 配列の長さを超えないように調整（最大で最後のステージを表示）
+    return Math.min(calculatedIndex, STAGES.length - 1);
   }, [cleanedCount]);
 
   const currentStage = STAGES[currentStageIndex];
