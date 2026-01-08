@@ -54,7 +54,11 @@ const getCharacterAnimation = (stageId: number): string => {
   }
 };
 
-export const StageScreen = () => {
+type StageScreenProps = {
+  onComplete?: () => void;
+};
+
+export const StageScreen = ({ onComplete }: StageScreenProps) => {
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
   const [showTitle, setShowTitle] = useState(true);
 
@@ -72,7 +76,9 @@ export const StageScreen = () => {
   }, [currentStageIndex]);
 
   const handleNext = () => {
-    if (!isLastStage) {
+    if (isLastStage) {
+      onComplete?.();
+    } else {
       setCurrentStageIndex(currentStageIndex + 1);
     }
   };
@@ -104,7 +110,7 @@ export const StageScreen = () => {
           <StageMessage message={currentStage.message} />
         </div>
         <div className="mb-8">
-          <Button label="NEXT" onClick={handleNext} disabled={isLastStage} />
+          <Button label="NEXT" onClick={handleNext} />
         </div>
       </div>
     </Layout>
