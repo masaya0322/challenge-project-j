@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db_connect import get_db, engine, Base
-from model import RFIDTag, ScannedRFID
+from model import RFIDTag, ScannedRFID, GameProgress
 from utility.game_progress import get_game_progress
 from pydantic import BaseModel
 from datetime import datetime
@@ -66,6 +66,25 @@ def get_currently_scanned_tags(db: Session = Depends(get_db)):
 @app.get("/api/game/progress", response_model=GameProgressResponse)
 def get_progress(db: Session = Depends(get_db)):
     return get_game_progress(db)
+
+@app.get("/api/game/reset")
+@app.post("/api/game/reset")
+def reset_game_progress(db: Session = Depends(get_db)):
+    """
+    ゲームの進行状況をリセットする
+    (GET/POST両対応)
+    - スキャン履歴(ScannedRFID)を全削除
+    - 進行状況(GameProgress)をリセット
+    """
+    # スキャン履歴の削除
+    db.query(ScannedRFID).delete()
+    
+    # 進行状況の削除（get_game_progressで再生成される）
+    db.query(GameProgress).delete()
+    
+    db.commit()
+    
+    return {"message": "Game progress reset successfully"}
 
 def handle_rfid_tag_scanned(rfid_tag_id: str, db: Session, default_name: str = "未登録のおもちゃ"):
     """
