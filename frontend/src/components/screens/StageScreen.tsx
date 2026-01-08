@@ -3,27 +3,22 @@
 import { Layout } from "@/components/layout";
 import { StageMessage } from "@/components/stage/stage-message";
 import { StageTitle } from "@/components/stage/stage-title";
-import { Button } from "@/components/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import { GameState } from "@/types/game"; // 型定義をインポート
 
 const STAGE_TITLE_DISPLAY_TIME = 2000;
 
-type StageData = {
-  id: number;
-  name: string;
-  message: string;
-  backgroundImageURL: string;
-  characterURL: string;
-};
-
-const STAGES: StageData[] = [
+// ステージごとのデータ定義
+const STAGES = [
   {
     id: 1,
     name: "Stage 1",
     message: "おもちゃをかたづけてスライムをたおせ！",
     backgroundImageURL: "/stage_background/stage1_bg.png",
     characterURL: "/charactor/slime.png",
+    animation: "animate-squishy",
+    requiredToys: 0, // 0個以上で表示
   },
   {
     id: 2,
@@ -31,41 +26,41 @@ const STAGES: StageData[] = [
     message: "おもちゃをかたづけてドラゴンをたおせ！",
     backgroundImageURL: "/stage_background/stage2_bg.png",
     characterURL: "/charactor/doragon.png",
+    animation: "animate-float",
+    requiredToys: 2, // 2個以上で表示
   },
   {
     id: 3,
     name: "Bonus Stage",
-    message: "おもちゃをかたづけてたからばこをあけろ！",
+    message: "たからばこをあけろ！",
     backgroundImageURL: "/stage_background/stage3_bg.png",
     characterURL: "/charactor/treasure_chest.png",
+    animation: "animate-sparkle",
+    requiredToys: 4, // 4個以上で表示
   },
 ];
 
-const getCharacterAnimation = (stageId: number): string => {
-  switch (stageId) {
-    case 1:
-      return "animate-squishy";
-    case 2:
-      return "animate-float";
-    case 3:
-      return "animate-sparkle";
-    default:
-      return "animate-float";
-  }
-};
-
 type StageScreenProps = {
+  gameState: GameState | null; // 親から現在のスコアをもらう
   onComplete?: () => void;
 };
 
-export const StageScreen = ({ onComplete }: StageScreenProps) => {
-  const [currentStageIndex, setCurrentStageIndex] = useState(0);
+export const StageScreen = ({ gameState, onComplete }: StageScreenProps) => {
   const [showTitle, setShowTitle] = useState(true);
+  
+  // 現在のスコア（おもちゃの数）
+  const cleanedCount = gameState?.cleanedToys || 0;
+
+  // 現在のスコアに最適なステージを計算
+  const currentStageIndex = useMemo(() => {
+    // 条件に合う（requiredToysを満たす）最大のインデックスを探す
+    const index = STAGES.findLastIndex(s => cleanedCount >= s.requiredToys);
+    return index !== -1 ? index : 0;
+  }, [cleanedCount]);
 
   const currentStage = STAGES[currentStageIndex];
-  const isLastStage = currentStageIndex === STAGES.length - 1;
-  const characterAnimation = getCharacterAnimation(currentStage.id);
 
+  // ステージが変わるたびにタイトルを表示する
   useEffect(() => {
     setShowTitle(true);
     const timer = setTimeout(() => {
@@ -75,13 +70,8 @@ export const StageScreen = ({ onComplete }: StageScreenProps) => {
     return () => clearTimeout(timer);
   }, [currentStageIndex]);
 
-  const handleNext = () => {
-    if (isLastStage) {
-      onComplete?.();
-    } else {
-      setCurrentStageIndex(currentStageIndex + 1);
-    }
-  };
+  // 全てのおもちゃが片付いたら完了（親に通知）
+  // ※ GamePage側のuseEffectでも判定していますが、ここでもケアしておくと安全です。
 
   if (showTitle) {
     return (
@@ -92,10 +82,15 @@ export const StageScreen = ({ onComplete }: StageScreenProps) => {
   }
 
   return (
-    <Layout backgroundImageUrl={currentStage.backgroundImageURL} >
-      <div className={`flex flex-col items-center justify-between min-h-screen w-screen h-screen p-6 animate-fade-in`}>
+    <Layout backgroundImageUrl={currentStage.backgroundImageURL}>
+      <div className="flex flex-col items-center justify-between min-h-screen w-screen h-screen p-6 animate-fade-in">
+        {/* スコア表示（デバッグ用・または演出用） */}
+        <div className="absolute top-4 right-4 bg-white/80 p-2 rounded-lg font-bold">
+          おもちゃ: {cleanedCount} / {gameState?.totalToys}
+        </div>
+
         <div className="flex-1 flex items-center justify-center w-full max-w-4xl">
-          <div className={`relative w-full h-full ${characterAnimation}`}>
+          <div className={`relative w-full h-full ${currentStage.animation}`}>
             <Image
               src={currentStage.characterURL}
               alt={currentStage.name}
@@ -106,11 +101,9 @@ export const StageScreen = ({ onComplete }: StageScreenProps) => {
             />
           </div>
         </div>
-        <div className="w-full mb-8">
+        
+        <div className="w-full mb-16">
           <StageMessage message={currentStage.message} />
-        </div>
-        <div className="mb-8">
-          <Button label="NEXT" onClick={handleNext} />
         </div>
       </div>
     </Layout>

@@ -96,16 +96,16 @@ const GamePage = ({ initialGameProgress }: GamePageProps) => {
         />
       );
 
-    case "stage":
-      // ゲームステージ画面
-      return (
-        <StageScreen
-          onComplete={() => {
-            setFinalGameState(gameState);
-            setCurrentScreen("result");
-          }}
-        />
-      );
+      case "stage":
+        return (
+          <StageScreen
+            gameState={gameState} // ここで渡す
+            onComplete={() => {
+              setFinalGameState(gameState);
+              setCurrentScreen("result");
+            }}
+          />
+        );
 
     case "result":
       // 結果画面
