@@ -140,28 +140,14 @@ curl http://localhost:8000/api/game/progress
 
 自動登録されたタグには「未登録のおもちゃ」という名前が付きます。わかりやすい名前に変更しましょう。
 
-### 方法1: simulate_rfid.pyのrename機能を使う（推奨）
+### データベースを直接更新
 
 ```bash
-# まず、登録されているタグを確認
-docker exec cpj-backend python simulate_rfid.py list
+# タグ一覧を確認
+curl http://localhost:8000/api/rfid-tags
 
-# タグIDをコピーして名前を変更
-docker exec cpj-backend python simulate_rfid.py rename E2801190200050246D8C1B72 ぬいぐるみ
-```
-
-出力例：
-```
-✅ タグ名を変更しました:
-   ID: E2801190200050246D8C1B72
-   旧名: 未登録のおもちゃ
-   新名: ぬいぐるみ
-```
-
-### 方法2: データベースを直接更新
-
-```bash
-docker exec -it cpj-backend python -c "
+# Pythonスクリプトで名前を変更
+docker exec cpj-backend python -c "
 from db_connect import SessionLocal
 from model import RFIDTag
 
@@ -173,6 +159,12 @@ if tag:
     print(f'タグ名を更新しました: {tag.name}')
 db.close()
 "
+```
+
+または、psqlで直接更新：
+
+```bash
+docker exec cpj-db psql -U user -d mydb -c "UPDATE rfid_tags SET name = 'ぬいぐるみ' WHERE rfid_tag = 'E2801190200050246D8C1B72';"
 ```
 
 ## 5. ゲームフローの動作
@@ -276,17 +268,20 @@ docker-compose down
 - **削除条件**: 10秒以上スキャンされていないレコード
 - **コード**: `delete_old_scanned_records(db, seconds=10)`
 
-## 9. 実機とシミュレーションの併用
+## 9. データベースの直接操作
 
-開発・テスト時は、実機とシミュレーションを併用できます：
+開発・テスト時にデータベースを直接操作できます：
 
 ```bash
-# 実機RFIDスキャナー起動
-docker-compose up -d scanner
+# スキャン履歴をクリア
+docker exec cpj-db psql -U user -d mydb -c "DELETE FROM currently_scanned_tags;"
 
-# 同時に、手動でタグを追加（テスト用）
-docker exec cpj-backend python simulate_rfid.py register TAG999 テスト用おもちゃ
-docker exec cpj-backend python simulate_rfid.py scan TAG999
+# ゲーム進行状況をリセット
+docker exec cpj-db psql -U user -d mydb -c "UPDATE game_progress SET cleaned_toys = 0;"
+
+# タグ名を変更
+docker exec cpj-db psql -U user -d mydb -c "UPDATE rfid_tags SET name = 'ぬいぐるみ' WHERE rfid_tag = 'E2801190200050246D8C1B72';"
+
+# 全てのデータをリセット
+docker exec cpj-db psql -U user -d mydb -c "DELETE FROM currently_scanned_tags; DELETE FROM rfid_tags; DELETE FROM game_progress;"
 ```
-
-実機でスキャンされたタグとシミュレートされたタグの両方が、データベースに記録されます。
