@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware # 追加
 from sqlalchemy.orm import Session
 from db_connect import get_db, engine, Base
 from model import RFIDTag, ScannedRFID
@@ -8,6 +9,16 @@ from datetime import datetime
 from typing import List
 
 app = FastAPI()
+
+# --- CORS設定 ここから ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],     # 全てのオリジンを許可
+    allow_credentials=True,  # クッキーや認証ヘッダーを許可
+    allow_methods=["*"],     # 全てのメソッド（GET, POST, OPTIONS等）を許可
+    allow_headers=["*"],     # 全てのヘッダーを許可
+)
+# --- CORS設定 ここまで ---
 
 Base.metadata.create_all(bind=engine)
 
