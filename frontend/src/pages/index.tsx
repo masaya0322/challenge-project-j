@@ -56,10 +56,12 @@ const GamePage = ({ initialGameProgress }: GamePageProps) => {
   useEffect(() => {
     if (currentScreen === "stage" && gameState) {
       const { totalToys, cleanedToys } = gameState;
-
-      if (isGameFinished(totalToys, cleanedToys)) {
-        // 最終スコアを保存してリザルト画面へ
+  
+      // おもちゃが9個以上になったか、または全クリア判定（isGameFinished）でリザルトへ
+      if (cleanedToys >= 9 || isGameFinished(totalToys, cleanedToys)) {
+        // 最終的なスコアをセット
         setFinalGameState(gameState);
+        // リザルト画面へ遷移
         setCurrentScreen("result");
       }
     }
