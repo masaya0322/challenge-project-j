@@ -77,7 +77,7 @@ export const StageScreen = ({ gameState, onComplete }: StageScreenProps) => {
         <div className="flex flex-col items-center justify-between min-h-screen w-screen h-screen p-6 animate-fade-in">
           {/* 進捗デバッグ表示 */}
           <div className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded">
-            Score: {cleanedCount}
+            cleanedCount: {cleanedCount}
           </div>
 
           <div className="flex-1 flex items-center justify-center w-full max-w-4xl">
