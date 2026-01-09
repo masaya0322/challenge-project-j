@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useGameProgress } from "@/hooks/useGameProgress";
 import { useGameState } from "@/hooks/useGameState";
 import { isGameFinished } from "@/lib/game/score";
+import { useBGM } from "@/hooks/useBGM";
 import type { GetServerSideProps } from "next";
 import { getGameProgress } from "@/lib/api/game";
 
@@ -51,6 +52,9 @@ const GamePage = ({ initialGameProgress }: GamePageProps) => {
     initialGameProgress
   );
   const gameState = useGameState(progress);
+
+  // BGM再生（StageScreen表示中のみ）
+  useBGM("/bgm/stage.mp3", currentScreen === "stage", true, 0.5);
 
   // ゲーム終了判定
   useEffect(() => {
