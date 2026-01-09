@@ -45,8 +45,8 @@ export const TimerSettingScreen = ({onStart, onTop, time, setTime} : TimerSettin
   return (
     <Layout >
       <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-700">
-        <h1 className="text-6xl font-extrabold mb-4 tracking-tight sm:text-7xl">
-          タイマー設定画面です。
+        <h1 className="text-6xl font-extrabold text-white mb-4 tracking-tight sm:text-7xl">
+          タイマーを設定してね！
         </h1>
         <div className="space-x-8 m-4">
           <Button label="+1h" onClick={() => incrementHour(1)}/>

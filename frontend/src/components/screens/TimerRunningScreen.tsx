@@ -42,8 +42,8 @@ export const TimerRunningScreen = ({ time, setTime, onComplete }: TimerRunningPr
   return (
     <Layout >
       <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-700">
-        <h1 className="text-6xl font-extrabold mb-4 tracking-tight sm:text-7xl">
-          お片付け前の準備中画面です。
+        <h1 className="text-6xl font-extrabold mb-4 text-white tracking-tight sm:text-7xl">
+          お片付け前の準備中・・・
         </h1>
         <TimerDisplay hour={displayHours} minute={displayMinutes} second={displaySeconds}/>
       </div>
