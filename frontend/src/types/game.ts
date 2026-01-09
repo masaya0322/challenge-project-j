@@ -6,7 +6,14 @@ export type ScreenType =
   | "stage"
   | "result";
 
+export type GameProgress = {
+  total_toys: number;
+  cleaned_toys: number;
+};
+
 export type GameState = {
   score: number;
-  toysCollected?: number;
+  currentStage: number;
+  totalToys: number;
+  cleanedToys: number;
 };
